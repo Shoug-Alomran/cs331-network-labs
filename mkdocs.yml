@@ -1,5 +1,5 @@
 site_name: CS331 · Network Labs
-site_url: https://networks.shoug-tech.com/
+site_url: https://network.shoug-tech.com/
 site_description: "CS331 Data Communications and Computer Networks at Prince Sultan University: a Wireshark packet capture lab on macOS, a subnetted two-LAN design in Cisco Packet Tracer, and a web server project, each with an animated presentation."
 site_author: Shoug Fawaz Abdullah Alomran
 repo_url: https://github.com/Shoug-Alomran/cs331-network-labs

@@ -5,7 +5,7 @@ Computer Networks** at Prince Sultan University, Term 261 (1st semester 2026–2
 
 - **Author:** Shoug Fawaz Abdullah Alomran
 - **Instructor:** Ms. Nada ALALYANI
-- **Live site:** <https://networks.shoug-tech.com>
+- **Live site:** <https://network.shoug-tech.com>
 
 | #   | Project                                                            | Type                   | Status      |
 | --- | ------------------------------------------------------------------ | ---------------------- | ----------- |
@@ -151,12 +151,12 @@ left-to-right. To add an Arabic (Saudi dialect) version:
 **GitHub Pages:** push to `main`. `.github/workflows/deploy.yml` builds with
 `mkdocs build --strict` and publishes `site/`. In the repository settings, set Pages
 → Source to _GitHub Actions_. `docs/CNAME` sets the custom domain to
-`networks.shoug-tech.com`.
+`network.shoug-tech.com`.
 
 **Vercel:** import the repository. `vercel.json` installs `requirements.txt`, runs
 `mkdocs build --strict`, and serves `site/`. Then add the domain in the Vercel project.
 
-For either one, point a `CNAME` record for `networks` at the host
+For either one, point a `CNAME` record for `network` at the host
 (`<user>.github.io` or `cname.vercel-dns.com`).
 
 ---
