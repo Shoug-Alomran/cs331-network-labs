@@ -1,0 +1,77 @@
+site_name: CS331 · Network Labs
+site_url: https://networks.shoug-tech.com/
+site_description: "CS331 Data Communications and Computer Networks at Prince Sultan University: a Wireshark packet capture lab on macOS, a subnetted two-LAN design in Cisco Packet Tracer, and a web server project, each with an animated presentation."
+site_author: Shoug Fawaz Abdullah Alomran
+repo_url: https://github.com/Shoug-Alomran/cs331-network-labs
+use_directory_urls: true
+copyright: © 2026 Shoug Alomran · All rights reserved
+
+theme:
+  # Fully custom theme (no Material), shared with the CS330 site. Templates live
+  # in theme/, styles and scripts in docs/assets/. See theme/main.html.
+  name: null
+  custom_dir: theme
+  locale: en
+  static_templates:
+    - 404.html
+  # Only build search/search_index.json; the ⌘K palette in site.js reads it.
+  search_index_only: true
+
+nav:
+  - Home: index.md
+  - Lab 01:
+      - Overview: wireshark-lab/index.md
+      - Setup: wireshark-lab/setup.md
+      - Capture & Filters: wireshark-lab/capture-and-filters.md
+      - ICMP Analysis: wireshark-lab/icmp-analysis.md
+      - Findings: wireshark-lab/findings.md
+      - Presentation: wireshark-lab/report.md
+  - Project 1:
+      - Overview: project-1/index.md
+      - Topology: project-1/topology.md
+      - Subnetting: project-1/subnetting.md
+      - Router Config: project-1/router-config.md
+      - End Devices: project-1/end-devices.md
+      - Verification: project-1/verification.md
+      - Presentation: project-1/report.md
+  - Project 2:
+      - Overview: project-2/index.md
+      - Presentation: project-2/report.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - md_in_html
+  - tables
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.highlight:
+      use_pygments: true
+      pygments_lang_class: true
+  # `/// note | Title` blocks: unlike indented `!!!` admonitions, they survive
+  # format-on-save in editors that strip the indentation.
+  - pymdownx.blocks.admonition:
+      types: [note, info, tip, warning, danger]
+  - toc:
+      permalink: "#"
+
+plugins:
+  - search
+
+hooks:
+  - hooks/icons.py
+
+validation:
+  nav:
+    # copyright.md, academic-disclaimer.md and privacy-notice.md are footer-only.
+    omitted_files: ignore
+    not_found: warn
+    absolute_links: ignore
+  links:
+    not_found: warn
+    unrecognized_links: warn
+
+extra:
+  generator: false

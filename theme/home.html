@@ -1,0 +1,367 @@
+{% extends "main.html" %}
+{%- import "partials/icons.html" as i with context -%}
+{% block page_id %}home{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow reveal"><span class="pulse-dot"></span>CS331 · Computer Networks<span class="hide-sm"> · Prince Sultan University</span></span>
+        <h1>
+          <span class="line"><span style="--i: 0">Follow the packet,</span></span>
+          <span class="line"><span style="--i: 1">hop by hop,</span></span>
+          <span class="line"><span style="--i: 2" class="grad-text">layer by layer.</span></span>
+        </h1>
+        <p class="lead reveal" style="--d: 3">
+          A Wireshark lab that reads real packets off a MacBook's Wi-Fi, from
+          the Ethernet header to the round-trip time. Then two Cisco Packet
+          Tracer builds: a subnetted two-LAN network joined by one router, and a
+          web server reached from a client's browser.
+        </p>
+        <div class="hero-actions reveal" style="--d: 4">
+          <a class="btn btn-primary" href="{{ 'wireshark-lab/icmp-analysis/' | url }}">{{ i.icon("activity") }}See the capture</a>
+          <a class="btn" href="{{ 'project-1/topology/' | url }}">{{ i.icon("network") }}Open the topology</a>
+        </div>
+        <div class="byline reveal" style="--d: 5">
+          <span class="avatars" aria-hidden="true"><span style="--c: var(--accent)">SA</span></span>
+          <span><b>Shoug Alomran</b> · CS331 · Ms. Nada ALALYANI · Term 261</span>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal" style="--d: 2" data-net-hero>
+        <span class="float-tag t1">{{ i.icon("zap") }}TTL 128 → 127 at R1</span>
+        <span class="float-tag t2">{{ i.icon("grid") }}/24 → 4 × /26</span>
+        <div class="machine" aria-label="Animation: R1 shows both interfaces up, then PC A pings PC2 across the router and the replies come back with TTL 127">
+          <div class="machine-bar">
+            <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="file" data-term-file>R1 · console</span>
+            <span class="phase" data-term-phase>router</span>
+          </div>
+          <div class="topo" aria-hidden="true"><svg></svg></div>
+          <pre class="term" aria-hidden="true"><span class="p">R1#</span> <span class="cursor"></span></pre>
+          <div class="ports" aria-hidden="true">
+            {%- for key, label in [("PCA","PC A"),("PCB","PC B"),("G00","G0/0"),("G01","G0/1"),("PC1","PC1"),("PC2","PC2"),("SRV","Server")] %}
+            <div class="p" data-port="{{ key }}"><div class="jack"><i></i><i></i></div><span class="lbl">{{ label }}</span></div>
+            {%- endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="stats reveal">
+    <div class="stat">
+      <div class="stat-value"><span data-count="10">10</span></div>
+      <div class="stat-label">ICMP packets behind one <code>ping -c 4</code></div>
+    </div>
+    <div class="stat">
+      <div class="stat-value"><span data-count="78.52" data-dec="2">78.52</span><small>ms</small></div>
+      <div class="stat-label">Round trip on the wire, vs 121.913 ms in <code>ping</code></div>
+    </div>
+    <div class="stat">
+      <div class="stat-value"><span data-count="62">62</span><small>hosts</small></div>
+      <div class="stat-label">Per /26, four subnets carved from one /24</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">TTL <span data-count="127">127</span></div>
+      <div class="stat-label">Exactly one router between the two LANs</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-tight">
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      {%- for pass in [1, 2] %}
+      <span>ip.addr == 192.168.1.229</span><span>icmp</span><span>dns or http</span><span>EtherType 0x0800</span><span>ping -c 4 google.com.sa</span><span>HEAD / HTTP/1.1</span><span>255.255.255.192</span><span>show ip interface brief</span><span>no shutdown</span><span>TTL=127</span><span>199.19.30.0/26</span><span>http://199.19.30.68</span>
+      {%- endfor %}
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="grid g-2 gap-lg" style="align-items: start">
+      <div class="section-head reveal" style="margin-bottom: 0">
+        <div class="kicker">00 · Abstract</div>
+        <h2>The IP address says where a packet is going. The MAC address says where it goes next.</h2>
+      </div>
+      <div class="prose reveal" style="--d: 1; padding-top: 0">
+        <p>
+          The coursework looks at one network from two sides. First by
+          <strong>watching</strong> it: a Wireshark capture on macOS, read through
+          six display filters. A single ping produced ten ICMP packets, and the
+          first echo request was framed for the <strong>router's MAC</strong>, not
+          Google's.
+        </p>
+        <p>
+          Then by <strong>building</strong> one. In Packet Tracer,
+          <code>199.19.30.0/24</code> was split into four <code>/26</code> subnets,
+          and a Cisco 2901 router joined two of them. The first ping failed with
+          <strong>100% loss</strong> because the two switch uplinks were on swapped
+          router ports. After re-cabling, replies came back with
+          <strong>TTL=127</strong>: one hop.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="kicker">01 · Three projects</div>
+      <h2>One lab to read the wire, two projects to build it.</h2>
+      <p>Each has its own pages, screenshots and presentation.</p>
+    </div>
+    <div class="grid g-3 projects">
+      <article class="card phase-card reveal" style="--d: 0">
+        <span class="card-index">lab / <b>01</b></span>
+        <div class="card-icon">{{ i.icon("activity") }}</div>
+        <h3>Wireshark Packet Capture and Display Filtering</h3>
+        <p class="tagline">Live capture on a MacBook Air's <code>en0</code>, six display filters, then one ping traced from the Ethernet header to its RTT.</p>
+        <div class="layers"><span><b>L2</b> Ethernet</span><span><b>L3</b> IP · ICMP</span><span><b>L7</b> HTTP · DNS</span></div>
+        <dl class="kv">
+          <div><dt>Filters</dt><dd>6</dd></div>
+          <div><dt>ICMP</dt><dd>10</dd></div>
+          <div><dt>Wire RTT</dt><dd class="good">78.52<small style="font-size:.6em">ms</small></dd></div>
+        </dl>
+        <div class="verdict" style="--c: var(--accent)">Frame 228 went to the gateway's MAC, addressed to Google's IP.</div>
+        <div class="links">
+          <a class="btn btn-sm" href="{{ 'wireshark-lab/' | url }}">{{ i.icon("arrow-right") }}Overview</a>
+          <a class="btn btn-sm" href="{{ 'wireshark-lab/report/' | url }}">{{ i.icon("slides") }}Presentation</a>
+        </div>
+      </article>
+      <article class="card phase-card reveal" style="--d: 1">
+        <span class="card-index">project / <b>01</b></span>
+        <div class="card-icon hot">{{ i.icon("router") }}</div>
+        <h3>Switch and Router Network Design</h3>
+        <p class="tagline">A Cisco 2901 and two 2960 switches in Packet Tracer. <code>199.19.30.0/24</code> subnetted to <code>/26</code>, a web page served across the router.</p>
+        <div class="layers"><span><b>L1</b> Cabling</span><span><b>L2</b> Switching</span><span><b>L3</b> Routing</span><span><b>L7</b> HTTP</span></div>
+        <dl class="kv">
+          <div><dt>Subnets</dt><dd>4</dd></div>
+          <div><dt>Devices</dt><dd>8</dd></div>
+          <div><dt>Reply TTL</dt><dd class="good">127</dd></div>
+        </dl>
+        <div class="verdict" style="--c: var(--hot)">First ping: 100% loss. The uplinks were on swapped router ports.</div>
+        <div class="links">
+          <a class="btn btn-sm" href="{{ 'project-1/' | url }}">{{ i.icon("arrow-right") }}Overview</a>
+          <a class="btn btn-sm" href="{{ 'project-1/report/' | url }}">{{ i.icon("slides") }}Presentation</a>
+          <a class="btn btn-sm" href="{{ 'project-1/assets/Shoug_Alomran_Project1.pkt' | url }}" download>{{ i.icon("download") }}.pkt</a>
+        </div>
+      </article>
+      <article class="card phase-card reveal" style="--d: 2">
+        <span class="card-index">project / <b>02</b></span>
+        <div class="card-icon">{{ i.icon("server") }}</div>
+        <h3>Web Server Configuration</h3>
+        <p class="tagline">Group project. A Packet Tracer server with HTTP and HTTPS on and a page for the group, opened from a client's browser by IP.</p>
+        <div class="layers"><span><b>L3</b> Addressing</span><span><b>L7</b> HTTP · HTTPS</span></div>
+        <dl class="kv">
+          <div><dt>Type</dt><dd>Group</dd></div>
+          <div><dt>Marks</dt><dd>2.5</dd></div>
+          <div><dt>Status</dt><dd style="color:var(--link-wait)">WIP</dd></div>
+        </dl>
+        <div class="verdict" style="--c: var(--link-wait)">In progress. No DNS server: the page is reached by IP address.</div>
+        <div class="links">
+          <a class="btn btn-sm" href="{{ 'project-2/' | url }}">{{ i.icon("arrow-right") }}Overview</a>
+          <a class="btn btn-sm" href="{{ 'project-2/report/' | url }}">{{ i.icon("slides") }}Presentation</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="ping-lab" style="padding-top: 0">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="kicker">02 · Ping lab</div>
+      <h2>Ping across R1, then swap the cables and try again.</h2>
+      <p>
+        The Project 1 network, simulated. Pick a source and a destination, and
+        choose whether the switch uplinks are cabled to the right router ports.
+        Watch which pings survive and what TTL comes back.
+      </p>
+    </div>
+    <div class="panel reveal ping-lab" data-ping-lab>
+      <div class="panel-head">
+        <span class="panel-title">{{ i.icon("send") }}C:\&gt; ping · project 1 topology</span>
+        <button class="btn btn-sm" type="button" data-lab-replay>{{ i.icon("play") }}Replay</button>
+      </div>
+      <div class="lab">
+        <div class="lab-main">
+          <div class="ctrl-row">
+            <div class="ctrl"><span class="lab-label">source</span>
+              <div class="seg" role="group" aria-label="Source host" data-ctl="src">
+                <button type="button" data-v="PCA" style="--c: var(--accent)" aria-pressed="true">PC A</button>
+                <button type="button" data-v="PCB" style="--c: var(--accent)" aria-pressed="false">PC B</button>
+              </div>
+            </div>
+            <div class="ctrl"><span class="lab-label">destination</span>
+              <div class="seg" role="group" aria-label="Destination" data-ctl="dst">
+                <button type="button" data-v="PC2" style="--c: var(--hot)" aria-pressed="true">PC2</button>
+                <button type="button" data-v="SRV" style="--c: var(--hot)" aria-pressed="false">Server</button>
+                <button type="button" data-v="LAN" style="--c: var(--hot)" aria-pressed="false">Same LAN</button>
+                <button type="button" data-v="GW" style="--c: var(--hot)" aria-pressed="false">Gateway</button>
+              </div>
+            </div>
+            <div class="ctrl"><span class="lab-label">uplinks</span>
+              <div class="seg" role="group" aria-label="Uplink cabling" data-ctl="cab">
+                <button type="button" data-v="ok" style="--c: var(--link-up)" aria-pressed="true">Correct</button>
+                <button type="button" data-v="swap" style="--c: var(--link-down)" aria-pressed="false">Swapped</button>
+              </div>
+            </div>
+          </div>
+          <div class="topo" aria-hidden="true"><svg></svg></div>
+        </div>
+        <div class="lab-side">
+          <dl class="readout">
+            <div><dt>Reply TTL</dt><dd data-out="ttl">127</dd></div>
+            <div><dt>Router hops</dt><dd data-out="hops">1</dd></div>
+            <div><dt>Replies</dt><dd data-out="res" class="good">4 / 4</dd></div>
+          </dl>
+          <pre class="term-out" aria-live="off"></pre>
+          <div class="lab-note" aria-live="polite">Pick a source and destination to send four echo requests.</div>
+          <div class="chip-row">
+            <span class="chip">Hosts start at TTL 128</span>
+            <span class="chip">R1 replies with 255</span>
+            <span class="chip">Simulated</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0">
+  <div class="container">
+    <div class="grid g-2 gap-lg" style="align-items: center">
+      <div class="section-head reveal" style="margin-bottom: 0">
+        <div class="kicker">03 · The capture</div>
+        <h2>One ping, ten ICMP packets.</h2>
+        <p>
+          These are the real frames from <code>wireshark_ping.pcapng</code>. Apply
+          the same filters used in the lab and watch the count change: 10 in
+          total, 6 from the Mac, 4 from Google. The two red rows are not part of
+          the ping. They are port unreachable messages the Mac sent for UDP that
+          arrived on closed ports.
+        </p>
+        <div class="hero-actions" style="margin-top: 28px">
+          <a class="btn btn-primary" href="{{ 'wireshark-lab/icmp-analysis/' | url }}">{{ i.icon("activity") }}ICMP analysis</a>
+          <a class="btn" href="{{ 'wireshark-lab/capture-and-filters/' | url }}">{{ i.icon("filter") }}All six filters</a>
+        </div>
+      </div>
+      <div class="panel reveal pkt-list" style="--d: 1" data-pkt>
+        <div class="pkt-filter">
+          <span class="bar">{{ i.icon("filter") }}<span>icmp</span></span>
+          <span class="count">displayed <b>10</b> / 10</span>
+        </div>
+        <div style="padding: 10px 14px; border-bottom: 1px solid var(--line)" class="pkt-buttons">
+          <button type="button" data-f="all" aria-pressed="true">icmp</button>
+          <button type="button" data-f="me" aria-pressed="false">icmp and ip.src == 192.168.1.229</button>
+          <button type="button" data-f="google" aria-pressed="false">icmp and ip.src == 172.217.17.35</button>
+        </div>
+        <div class="pkt-table">
+          <div class="pkt-row head"><span>No.</span><span>Time</span><span>Source</span><span>Destination</span><span>TTL</span><span>Info</span></div>
+          {%- for no, t, s, d, ttl, kind, info in [
+            ("228","10.013828","192.168.1.229","172.217.17.35","64","req","Echo (ping) request"),
+            ("230","10.092348","172.217.17.35","192.168.1.229","114","rep","Echo (ping) reply"),
+            ("237","10.984633","192.168.1.229","172.217.17.35","64","req","Echo (ping) request"),
+            ("238","11.074491","172.217.17.35","192.168.1.229","114","rep","Echo (ping) reply"),
+            ("296","11.986483","192.168.1.229","172.217.17.35","64","req","Echo (ping) request"),
+            ("300","12.077758","172.217.17.35","192.168.1.229","114","rep","Echo (ping) reply"),
+            ("321","12.608500","192.168.1.229","192.168.1.1","64","err","Port unreachable"),
+            ("350","12.993154","192.168.1.229","172.217.17.35","64","req","Echo (ping) request"),
+            ("359","13.097548","172.217.17.35","192.168.1.229","114","rep","Echo (ping) reply"),
+            ("419","15.664519","192.168.1.229","198.41.192.67","64","err","Port unreachable")] %}
+          <div class="pkt-row {{ kind }}{% if no == '228' %} sel{% endif %}" data-src="{{ 'me' if s == '192.168.1.229' else 'google' }}"><span>{{ no }}</span><span>{{ t }}</span><span>{{ s }}</span><span>{{ d }}</span><span>{{ ttl }}</span><span>{{ info }}</span></div>
+          {%- endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0">
+  <div class="container">
+    <div class="grid g-2 gap-lg" style="align-items: center">
+      <div class="panel reveal" style="--p1: var(--accent); --p4: var(--hot)">
+        <div class="panel-head">
+          <span class="panel-title">{{ i.icon("clock") }}round trip · wire vs ping, ms</span>
+          <span class="legend"><span style="--c: var(--accent)"><i></i>Wireshark</span><span style="--c: var(--hot)"><i></i>ping</span></span>
+        </div>
+        <div class="panel-body">
+          <div class="dumbbell">
+            {%- for n, wire, app, gap in [(1, 78.520, 121.913, "+43.39"), (2, 89.858, 91.989, "+2.13"), (3, 91.275, 92.667, "+1.39"), (4, 104.394, 106.484, "+2.09")] %}
+            {%- set a = ((wire - 70) / 60 * 100) | round(1) %}{%- set b = ((app - 70) / 60 * 100) | round(1) %}
+            <div class="db-row">
+              <div class="db-label">echo {{ n }}<small>seq={{ n - 1 }}</small></div>
+              <div class="db-track"><span class="db-line" style="--a: {{ a }}; --b: {{ b }}"></span><span class="db-dot" style="--x: {{ a }}; --c: var(--p1)"><span>{{ wire }}</span></span><span class="db-dot" style="--x: {{ b }}; --c: var(--p4)">{% if n == 1 %}<span>{{ app }}</span>{% endif %}</span></div>
+              <div class="db-verdict{% if n == 1 %} bad{% else %} even{% endif %}">{{ gap }}</div>
+            </div>
+            {%- endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="section-head reveal" style="margin-bottom: 0; --d: 1">
+        <div class="kicker">04 · Two clocks</div>
+        <h2>The wire took 78.52 ms. The app counted 121.913.</h2>
+        <p>
+          Wireshark stamps a packet when it passes the network interface.
+          <code>ping</code> reads the clock inside the program, so it also counts
+          the kernel, socket buffers and the time it takes to be scheduled. That
+          overhead was about <strong>43 ms on the first echo</strong> and only
+          1 to 2 ms on the other three.
+        </p>
+        <div class="hero-actions" style="margin-top: 28px">
+          <a class="btn" href="{{ 'wireshark-lab/icmp-analysis/' | url }}#rtt-7852-ms-on-the-wire-121913-ms-in-ping">{{ i.icon("clock") }}RTT analysis</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="kicker">05 · Explore</div>
+      <h2>From the first filter to the last <code style="font-size:.8em">no shutdown</code>.</h2>
+    </div>
+    <div class="grid g-4">
+      {%- set explore = [
+        ("wireshark-lab/setup/", "laptop", "macOS setup", "ifconfig en0 for ipconfig, ping -c 4 for ping -4, and the real hardware MAC."),
+        ("wireshark-lab/capture-and-filters/", "filter", "Display filters", "The six filters, the HTTPS-only PSU site, and two correct DNS answers."),
+        ("wireshark-lab/icmp-analysis/", "activity", "ICMP analysis", "Ten ICMP frames, frame 228's headers, hop-by-hop MAC and the RTT."),
+        ("project-1/topology/", "network", "Topology", "Eight devices, the cabling, and which router port faces which LAN."),
+        ("project-1/subnetting/", "grid", "Subnetting", "Borrow 2 bits: /24 to four /26, 62 hosts each, block size 64."),
+        ("project-1/router-config/", "terminal", "Router config", "hostname, ip address and no shutdown on R1, then show ip interface brief."),
+        ("project-1/end-devices/", "monitor", "End devices", "Static addresses, gateways and the custom web page on Server 1."),
+        ("project-1/verification/", "check", "Verification", "The 100% loss incident, the fix, and the TTL=127 replies.")] %}
+      {%- for href, ic, title, text in explore %}
+      <a class="card card-link reveal" style="--d:{{ loop.index0 % 4 }}" href="{{ href | url }}">
+        <div class="card-icon">{{ i.icon(ic) }}</div>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+        <span class="go">Open{{ i.icon("arrow-right") }}</span>
+      </a>
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0">
+  <div class="container">
+    <div class="cta reveal">
+      <div class="kicker">CS331 · Data Communications and Computer Networks</div>
+      <h2>Open a presentation, or download the network.</h2>
+      <p>Each project has an animated deck. Use the arrow keys, click or swipe to move through it.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="{{ 'project-1/report/' | url }}">{{ i.icon("slides") }}Project 1 deck</a>
+        <a class="btn" href="{{ 'wireshark-lab/report/' | url }}">{{ i.icon("slides") }}Lab 01 deck</a>
+        <a class="btn" href="{{ 'project-1/assets/Shoug_Alomran_Project1.pkt' | url }}" download>{{ i.icon("download") }}Shoug_Alomran_Project1.pkt</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,380 @@
+/* ==========================================================================
+   CS331 · Network Labs — network components on top of site.css
+   Link LEDs, OSI port strip, topology diagrams, packet list, ping lab,
+   subnet split, incident log and Cisco IOS terminal colouring.
+   ========================================================================== */
+
+:root {
+  --link-up: #34d399;
+  --link-down: #fb7185;
+  --link-wait: #fbbf24;
+}
+:root[data-theme="light"] {
+  --link-up: #059669;
+  --link-down: #e11d48;
+  --link-wait: #b45309;
+}
+
+/* Network-coloured aurora (overrides the CS330 blue one) */
+body::after {
+  background:
+    radial-gradient(closest-side at 32% 55%, rgba(34, 211, 238, 0.14), transparent),
+    radial-gradient(closest-side at 72% 45%, rgba(251, 191, 36, 0.06), transparent);
+}
+
+/* ---------- Link LEDs (Packet Tracer link lights) ---------- */
+.led {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--link-up);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--link-up) 18%, transparent), 0 0 10px var(--link-up);
+  vertical-align: 1px;
+}
+.led.down { background: var(--link-down); box-shadow: 0 0 0 3px color-mix(in srgb, var(--link-down) 18%, transparent), 0 0 10px var(--link-down); }
+.led.wait { background: var(--link-wait); box-shadow: 0 0 0 3px color-mix(in srgb, var(--link-wait) 18%, transparent), 0 0 10px var(--link-wait); }
+
+/* ---------- OSI port strip in the page hero ---------- */
+.osi-ports {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  max-width: 760px;
+  margin-top: 22px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg-2);
+}
+.osi-ports .port {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  padding: 9px 10px 8px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel-2);
+  font: 500 10.5px/1 var(--font-mono);
+  color: var(--dim);
+  min-width: 0;
+}
+.osi-ports .port i {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--line-2);
+}
+.osi-ports .port b { color: var(--muted); font-weight: 600; font-size: 11px; }
+.osi-ports .port em { font-style: normal; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.osi-ports .port.on { border-color: var(--accent-line); background: var(--accent-soft); color: var(--text); }
+.osi-ports .port.on b { color: var(--accent); }
+.osi-ports .port.on i { background: var(--link-up); box-shadow: 0 0 8px var(--link-up); animation: ledBlink 2.4s ease-in-out infinite; }
+.osi-ports .port.on:nth-child(2n) i { animation-delay: -1.2s; }
+@keyframes ledBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@media (max-width: 640px) {
+  .osi-ports { gap: 4px; padding: 6px; }
+  .osi-ports .port { padding: 8px 6px 7px; text-align: center; }
+  .osi-ports .port em { display: none; }
+  .osi-ports .port i { top: 4px; right: 4px; width: 5px; height: 5px; }
+}
+
+/* ---------- Topology diagrams (inline SVG) ---------- */
+.topo svg { display: block; width: 100%; height: auto; overflow: visible; }
+.topo .wire { stroke: var(--line-2); stroke-width: 2; fill: none; }
+.topo .wire.trunk { stroke: var(--accent-line); stroke-width: 2.5; }
+.topo .wire.hot { stroke: var(--accent); filter: drop-shadow(0 0 4px var(--accent)); }
+.topo .node rect { fill: var(--panel-solid); stroke: var(--line-2); stroke-width: 1.2; }
+.topo .node.router rect { stroke: var(--hot-line); }
+.topo .node.switch rect { stroke: var(--accent-line); }
+.topo .node .ico { fill: none; stroke: var(--muted); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.topo .node.router .ico { stroke: var(--hot); }
+.topo .node.switch .ico { stroke: var(--accent); }
+.topo text { font-family: var(--font-mono); font-size: 11.5px; fill: var(--text); }
+.topo text.sub { fill: var(--dim); font-size: 10px; }
+.topo text.net { fill: var(--muted); font-size: 10.5px; letter-spacing: 0.04em; }
+.topo .ledc { fill: var(--link-up); }
+.topo .ledc.down { fill: var(--link-down); }
+.topo .pkt { fill: var(--accent); filter: drop-shadow(0 0 6px var(--accent)); }
+.topo .pkt.rep { fill: var(--hot); filter: drop-shadow(0 0 6px var(--hot)); }
+.topo .zone { fill: color-mix(in srgb, var(--accent) 4%, transparent); stroke: var(--line); stroke-dasharray: 4 5; }
+
+/* ---------- Home hero: router console ---------- */
+.machine .topo { padding: 14px 16px 4px; border-bottom: 1px solid var(--line); background: var(--bg-2); }
+.machine .term { height: 200px; }
+.ports {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  padding: 14px 20px 18px;
+  border-top: 1px solid var(--line);
+  background: var(--bg-2);
+}
+.ports .p {
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+}
+.ports .jack {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-2);
+}
+.ports .jack::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 5px;
+  width: 46%;
+  height: 11px;
+  transform: translateX(-50%);
+  border: 1px solid var(--line-2);
+  border-top-width: 3px;
+  border-radius: 2px;
+}
+.ports .jack i {
+  position: absolute;
+  top: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--line-2);
+}
+.ports .jack i:first-child { left: 6px; background: var(--link-up); box-shadow: 0 0 6px var(--link-up); }
+.ports .jack i:last-child { right: 6px; }
+.ports .p.tx .jack i:last-child { background: var(--hot); box-shadow: 0 0 6px var(--hot); }
+.ports .p.idle .jack i:first-child { background: var(--line-2); box-shadow: none; }
+.ports .lbl { color: var(--dim); font: 500 9.5px/1 var(--font-mono); white-space: nowrap; }
+@media (max-width: 560px) {
+  .machine .term { height: 180px; }
+  .ports { gap: 5px; padding: 12px 14px 14px; }
+  .ports .lbl { font-size: 8.5px; }
+}
+
+/* ---------- Wireshark-style packet list ---------- */
+.pkt-list { font: 400 12.5px/1.4 var(--font-mono); }
+.pkt-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-2);
+}
+.pkt-filter .bar {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid color-mix(in srgb, var(--link-up) 45%, var(--line-2));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--link-up) 8%, var(--panel-solid));
+  color: var(--text);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.pkt-filter .bar .icon { width: 14px; height: 14px; color: var(--link-up); }
+.pkt-filter .count { color: var(--dim); font-size: 12px; white-space: nowrap; }
+.pkt-filter .count b { color: var(--accent); }
+.pkt-table { overflow-x: auto; }
+.pkt-row {
+  display: grid;
+  grid-template-columns: 52px 92px minmax(120px, 1fr) minmax(120px, 1fr) 40px minmax(180px, 1.4fr);
+  gap: 12px;
+  min-width: 720px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  transition: opacity 0.35s, background 0.35s, filter 0.35s;
+}
+.pkt-row.head { color: var(--dim); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; background: var(--panel-2); }
+.pkt-row:last-child { border-bottom: 0; }
+.pkt-row.req { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.pkt-row.rep { background: color-mix(in srgb, var(--hot) 7%, transparent); }
+.pkt-row.err { background: color-mix(in srgb, var(--link-down) 9%, transparent); }
+.pkt-row.req span:last-child { color: var(--accent); }
+.pkt-row.rep span:last-child { color: var(--hot); }
+.pkt-row.err span:last-child { color: var(--link-down); }
+.pkt-row.sel { box-shadow: inset 2px 0 0 var(--accent); }
+.pkt-row.out { opacity: 0.16; filter: saturate(0); }
+.pkt-row.slide { animation: rowIn 0.5s var(--ease) both; animation-delay: calc(var(--i, 0) * 60ms); }
+@keyframes rowIn { from { opacity: 0; transform: translateX(-14px); } }
+.pkt-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+.pkt-buttons button {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  background: var(--panel-solid);
+  color: var(--muted);
+  font: 500 12px/1 var(--font-mono);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.pkt-buttons button:hover { color: var(--text); border-color: var(--accent-line); }
+.pkt-buttons button[aria-pressed="true"] { color: var(--text); border-color: var(--accent); background: var(--accent-soft); }
+
+/* ---------- Ping lab (home) ---------- */
+.ping-lab .seg button { min-width: 0; }
+.ping-lab .ctrl { display: grid; gap: 8px; }
+.ping-lab .ctrl-row { display: flex; flex-wrap: wrap; gap: 18px; margin-bottom: 18px; }
+.ping-lab .topo { margin: 6px 0 4px; }
+.ping-lab .topo .node.src rect { stroke: var(--accent); stroke-width: 2; }
+.ping-lab .topo .node.dst rect { stroke: var(--hot); stroke-width: 2; }
+.ping-lab .term-out {
+  height: 150px;
+  margin: 14px 0 0;
+  padding: 14px 16px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg-2);
+  color: var(--muted);
+  font: 400 12.5px/1.65 var(--font-mono);
+  white-space: pre;
+}
+.ping-lab .readout dd.good { color: var(--link-up); }
+.ping-lab .readout dd.bad { color: var(--link-down); }
+@media (max-width: 560px) { .ping-lab .term-out { font-size: 11px; } }
+
+/* ---------- Subnet split ---------- */
+.subnets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 0 0 28px;
+  font-family: var(--font-mono);
+}
+.subnets .blk {
+  position: relative;
+  padding: 16px 14px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  transition: transform 0.35s var(--ease), border-color 0.3s;
+}
+.subnets .blk:hover { transform: translateY(-3px); border-color: var(--accent-line); }
+.subnets .blk::before { content: ""; position: absolute; top: -1px; left: 14px; right: 14px; height: 2px; border-radius: 2px; background: var(--c, var(--line-2)); }
+.subnets .blk em { display: block; color: var(--c, var(--dim)); font: 500 10.5px/1.3 var(--font-mono); font-style: normal; letter-spacing: 0.08em; text-transform: uppercase; }
+.subnets .blk b { display: block; margin: 8px 0 6px; font: 600 20px/1 var(--font-display); color: var(--text); }
+.subnets .blk span { color: var(--muted); font-size: 12px; line-height: 1.6; }
+.subnets .blk.a { --c: var(--accent); }
+.subnets .blk.b { --c: var(--hot); }
+.subnets .blk.f { border-style: dashed; }
+.js .subnets.reveal .blk { opacity: 0; transform: translateY(14px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); transition-delay: calc(var(--i) * 110ms + 150ms); }
+.js .subnets.reveal.in .blk { opacity: 1; transform: none; }
+@media (max-width: 720px) { .subnets { grid-template-columns: repeat(2, 1fr); } }
+.bits { margin: -8px 0 28px; color: var(--muted); font: 500 14px/1.6 var(--font-mono); }
+.bits .n { color: var(--hot); font-weight: 600; }
+.bits .h { color: var(--accent); }
+
+/* ---------- Ethernet frame header ---------- */
+.frame {
+  display: grid;
+  grid-template-columns: 6fr 6fr 2.4fr 8fr;
+  gap: 6px;
+  margin: 0 0 28px;
+  font-family: var(--font-mono);
+}
+.frame > div { min-width: 0; padding: 14px 14px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.frame em { display: block; color: var(--dim); font: 500 10.5px/1.3 var(--font-mono); font-style: normal; letter-spacing: 0.08em; text-transform: uppercase; }
+.frame b { display: block; margin: 8px 0 4px; font-size: 14px; color: var(--text); word-break: break-all; }
+.frame span { color: var(--muted); font-size: 12px; }
+.frame .l2 { box-shadow: inset 0 2px 0 var(--accent); }
+.frame .ty { box-shadow: inset 0 2px 0 var(--hot); }
+.frame .ty b { color: var(--hot); }
+.frame .l3 { box-shadow: inset 0 2px 0 var(--link-up); }
+@media (max-width: 720px) { .frame { grid-template-columns: 1fr 1fr; } }
+
+/* ---------- Incident log (troubleshooting story) ---------- */
+.incident {
+  position: relative;
+  margin: 0 0 28px;
+  padding: 26px 26px 10px;
+  border: 1px solid color-mix(in srgb, var(--link-down) 38%, var(--line));
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--link-down) 8%, transparent), transparent 55%), var(--panel);
+}
+.incident .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--link-down);
+  font: 600 11.5px/1 var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.incident h3 { margin: 12px 0 18px !important; }
+.prose .timeline { list-style: none; margin: 0; padding: 0; }
+.prose .timeline li {
+  position: relative;
+  margin: 0;
+  padding: 0 0 20px 30px;
+  border-left: 1px solid var(--line-2);
+  margin-left: 6px;
+  counter-increment: none;
+}
+.prose .timeline li::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 4px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--c, var(--link-down));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--c, var(--link-down)) 18%, transparent), 0 0 12px var(--c, var(--link-down));
+}
+.prose .timeline li:last-child { border-color: transparent; }
+.prose .timeline li.mid { --c: var(--link-wait); }
+.prose .timeline li.ok { --c: var(--link-up); }
+.prose .timeline .t {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--dim);
+  font: 500 11px/1.3 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---------- Cisco IOS terminal colouring (applied by net.js) ---------- */
+.highlight .ios-prompt { color: var(--accent); font-weight: 600; }
+.highlight .ios-ok { color: var(--link-up); }
+.highlight .ios-bad { color: var(--link-down); }
+.highlight .ios-dim { color: var(--dim); font-style: italic; }
+
+/* ---------- Screenshots: keep dark captures on a neutral ground ---------- */
+.gallery.contain img { background: var(--bg-2); }
+.gallery.tall img { aspect-ratio: auto; max-height: 640px; }
+
+/* ---------- Embedded presentation ---------- */
+.embed.deck iframe { height: auto; aspect-ratio: 16 / 10; max-height: 82vh; background: var(--bg); }
+
+/* ---------- Project cards on the home page ---------- */
+.phase-card .card-index b { color: var(--accent); font-weight: 600; }
+.phase-card .layers { display: flex; flex-wrap: wrap; gap: 6px; margin: -10px 0 22px; }
+.phase-card .layers span {
+  padding: 4px 9px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  color: var(--muted);
+  font: 500 11px/1 var(--font-mono);
+}
+.phase-card .layers span b { color: var(--accent); font-weight: 600; }
+.g-3 .phase-card h3 { font-size: 22px; }
+@media (max-width: 1100px) { .grid.g-3.projects { grid-template-columns: 1fr; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .osi-ports .port.on i { animation: none; }
+  .topo .pkt { display: none; }
+}

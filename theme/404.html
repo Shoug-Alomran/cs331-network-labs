@@ -1,0 +1,27 @@
+{% extends "main.html" %} {%- import "partials/icons.html" as i with context -%}
+{% block htmltitle %}Page not found · CS331{% endblock %} {% block page_id
+%}404{% endblock %} {% block content %}
+<section class="nf">
+  <div class="container">
+    <div class="eyebrow reveal">
+      <span class="pulse-dot" style="background: var(--bad)"></span>Destination
+      unreachable · 404
+    </div>
+    <div class="code reveal" style="--d: 1">
+      <span class="grad-text">404</span>
+    </div>
+    <p class="reveal" style="--d: 2">
+      Request timed out. No route to this page: it doesn’t exist, or it moved
+      when the site was reorganised.
+    </p>
+    <div class="hero-actions reveal" style="--d: 3">
+      <a class="btn btn-primary" href="{{ nav.homepage.url | url }}"
+        >{{ i.icon("arrow-left") }}Back home</a
+      >
+      <button class="btn" type="button" data-search-open>
+        {{ i.icon("search") }}Search the site
+      </button>
+    </div>
+  </div>
+</section>
+{% endblock %}

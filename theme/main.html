@@ -1,0 +1,234 @@
+{%- import "partials/icons.html" as i with context -%}
+{%- set section_icons = {"Lab 01": "activity", "Project 1": "router", "Project 2": "server"} -%}
+{%- set repo = config.repo_url -%}
+{%- set osi = ["Physical", "Data Link", "Network", "Transport", "Session", "Presentation", "Application"] -%}
+{%- set page_title = (page.meta.title if page and page.meta and page.meta.title else (page.title if page and page.title else "")) -%}
+{%- set doc_title = ("CS331 · Network Labs" if (page and page.is_homepage) else (page_title ~ " · CS331")) -%}
+{%- set description = (page.meta.description if page and page.meta and page.meta.description else config.site_description) -%}
+<!doctype html>
+<html lang="{{ config.theme.locale.language }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block htmltitle %}{{ doc_title }}{% endblock %}</title>
+<meta name="description" content="{{ description }}">
+<meta name="author" content="{{ config.site_author }}">
+{%- if page and page.canonical_url %}
+<link rel="canonical" href="{{ page.canonical_url }}">
+{%- endif %}
+<meta name="theme-color" content="#050508">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CS331 · Network Labs">
+<meta property="og:title" content="{{ doc_title }}">
+<meta property="og:description" content="{{ description }}">
+{%- if page and page.canonical_url %}
+<meta property="og:url" content="{{ page.canonical_url }}">
+{%- endif %}
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ doc_title }}">
+<meta name="twitter:description" content="{{ description }}">
+<link rel="icon" href="{{ 'assets/favicon.svg' | url }}" type="image/svg+xml">
+<script>(function(){var t=null;try{t=localStorage.getItem("cs331-theme")}catch(e){}if(t!=="light"){t="dark"}document.documentElement.setAttribute("data-theme",t)})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="{{ 'assets/css/site.css' | url }}">
+<link rel="stylesheet" href="{{ 'assets/css/network.css' | url }}">
+{%- for path in config.extra_css %}
+<link rel="stylesheet" href="{{ path | url }}">
+{%- endfor %}
+{% block extrahead %}{% endblock %}
+</head>
+<body data-page="{% block page_id %}doc{% endblock %}" data-base="{{ base_url }}">
+
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
+
+<header class="site-header" id="top">
+  <div class="container">
+    <a class="brand" href="{{ nav.homepage.url | url }}" aria-label="CS331 network labs home">
+      <span class="brand-mark">{{ i.icon("network") }}</span>
+      <span class="brand-text"><b>CS331</b> <span>/ network-labs</span></span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      {%- for item in nav %}
+        {%- if item.is_section %}
+        <div class="nav-item{% if item.active %} is-active{% endif %}">
+          <button class="nav-link" type="button" aria-haspopup="true" aria-expanded="false">{{ item.title }}{{ i.icon("chev", "chev") }}</button>
+          <div class="dropdown">
+            <div class="dropdown-inner">
+              <div class="dropdown-label">{{ i.icon(section_icons.get(item.title, "layers")) }}{{ item.title }}</div>
+              {%- for child in item.children if child.is_page %}
+              <a class="dd-link{% if child.active %} is-current{% endif %}" href="{{ child.url | url }}"{% if child.active %} aria-current="page"{% endif %}>
+                <span class="dd-icon">{{ i.icon(child.meta.icon or "file") }}</span>
+                <span><b>{{ child.meta.nav_title or child.title }}</b>{% if child.meta.summary %}<small>{{ child.meta.summary }}</small>{% endif %}</span>
+              </a>
+              {%- endfor %}
+            </div>
+          </div>
+        </div>
+        {%- endif %}
+      {%- endfor %}
+    </nav>
+
+    <div class="header-actions">
+      <button class="search-trigger" type="button" aria-label="Search the site" data-search-open>
+        {{ i.icon("search") }}<span class="hide-md">Search</span><kbd class="hide-md">⌘K</kbd>
+      </button>
+      <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">{{ i.icon("moon", "i-moon") }}{{ i.icon("sun", "i-sun") }}</button>
+      <a class="icon-btn hide-sm" href="{{ repo }}" target="_blank" rel="noopener" aria-label="Source on GitHub">{{ i.icon("github") }}</a>
+      <a class="btn btn-primary btn-sm hide-sm" href="{{ 'project-1/report/' | url }}">{{ i.icon("slides") }}Present</a>
+      <button class="icon-btn menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav"><span class="bars"></span></button>
+    </div>
+  </div>
+</header>
+
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile">
+  <div class="m-group">
+    <div class="m-label">Start</div>
+    <a href="{{ nav.homepage.url | url }}"{% if page and page.is_homepage %} aria-current="page"{% endif %}>{{ i.icon("network") }}Home</a>
+  </div>
+  {%- for item in nav if item.is_section %}
+  <div class="m-group">
+    <div class="m-label">{{ item.title }}</div>
+    {%- for child in item.children if child.is_page %}
+    <a href="{{ child.url | url }}"{% if child.active %} aria-current="page"{% endif %}>{{ i.icon(child.meta.icon or "file") }}{{ child.meta.nav_title or child.title }}</a>
+    {%- endfor %}
+  </div>
+  {%- endfor %}
+</nav>
+
+<main id="main">
+{% block content %}
+<header class="page-hero">
+  <div class="container">
+    <div class="crumbs reveal">
+      <a href="{{ nav.homepage.url | url }}">~</a>
+      {%- set parts = page.url.strip('/').split('/') %}
+      {%- for part in parts if part %}
+      <span class="sep">/</span>{% if loop.last %}<span class="here">{{ part }}</span>{% else %}<span>{{ part }}</span>{% endif %}
+      {%- endfor %}
+    </div>
+    {%- if page.meta.kicker %}<div class="kicker reveal" style="--d:1">{{ page.meta.kicker }}</div>{% endif %}
+    <h1 class="reveal" style="--d:1">{{ (page.meta.hero or page_title) | safe }}</h1>
+    {%- if page.meta.lead %}<p class="lead reveal" style="--d:2">{{ page.meta.lead | safe }}</p>{% endif %}
+    {%- if page.meta.chips %}
+    <div class="meta-row reveal" style="--d:3">
+      {%- for chip in page.meta.chips %}<span class="chip">{{ chip | safe }}</span>{% endfor %}
+    </div>
+    {%- endif %}
+    {%- if page.meta.layers %}
+    <div class="osi-ports reveal" style="--d:3" role="img" aria-label="OSI layers covered: {% for n in page.meta.layers %}L{{ n }} {{ osi[n-1] }}{% if not loop.last %}, {% endif %}{% endfor %}">
+      {%- for name in osi %}
+      <span class="port{% if loop.index in page.meta.layers %} on{% endif %}"><i></i><b>L{{ loop.index }}</b><em>{{ name }}</em></span>
+      {%- endfor %}
+    </div>
+    {%- endif %}
+    {%- if page.meta.actions %}
+    <div class="hero-actions reveal" style="--d:4">
+      {%- for a in page.meta.actions %}
+      <a class="btn{% if loop.first %} btn-primary{% endif %}" href="{{ a.href }}"{% if a.href.startswith('http') %} target="_blank" rel="noopener"{% endif %}>{{ i.icon(a.icon or "arrow-right") }}{{ a.label }}</a>
+      {%- endfor %}
+    </div>
+    {%- endif %}
+  </div>
+</header>
+
+<div class="container">
+  <div class="page-body{% if not page.toc or page.meta.hide_toc %} no-toc{% endif %}">
+    <article class="content prose">
+      {{ page.content }}
+    </article>
+    {%- if page.toc and not page.meta.hide_toc %}
+    <aside class="toc" aria-label="On this page">
+      <div class="toc-inner">
+        <div class="toc-title">On this page</div>
+        <nav>
+          {%- for item in page.toc %}
+            {%- if item.level == 2 %}<a href="{{ item.url }}">{{ item.title }}</a>{% endif %}
+            {%- for sub in item.children if sub.level == 2 %}<a href="{{ sub.url }}">{{ sub.title }}</a>{% endfor %}
+          {%- endfor %}
+        </nav>
+        <a class="toc-top" href="#top">{{ i.icon("arrow-up") }}Back to top</a>
+      </div>
+    </aside>
+    {%- endif %}
+  </div>
+
+  {%- if page.previous_page or page.next_page %}
+  <nav class="pager" aria-label="Pagination">
+    {%- if page.previous_page %}
+    <a class="prev" href="{{ page.previous_page.url | url }}"><span class="dir">{{ i.icon("arrow-left") }}Previous</span><b>{{ page.previous_page.meta.nav_title or page.previous_page.title }}</b></a>
+    {%- else %}<span></span>{% endif %}
+    {%- if page.next_page %}
+    <a class="next" href="{{ page.next_page.url | url }}"><span class="dir">Next{{ i.icon("arrow-right") }}</span><b>{{ page.next_page.meta.nav_title or page.next_page.title }}</b></a>
+    {%- endif %}
+  </nav>
+  {%- endif %}
+</div>
+{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="{{ nav.homepage.url | url }}"><span class="brand-mark">{{ i.icon("network") }}</span><span class="brand-text"><b>CS331</b> <span>/ network-labs</span></span></a>
+        <p>Data Communications and Computer Networks at Prince Sultan University. Real packets read off a Wi-Fi interface in Wireshark, and subnetted, routed networks built in Cisco Packet Tracer.</p>
+        <a class="footer-mail" href="mailto:inquiry@shoug-tech.com">{{ i.icon("mail") }}inquiry@shoug-tech.com</a>
+      </div>
+      <div class="footer-cols">
+        {%- for item in nav if item.is_section %}
+        <div class="footer-col">
+          <h4>{{ item.title }}</h4>
+          {%- for child in item.children if child.is_page %}<a href="{{ child.url | url }}">{{ child.meta.nav_title or child.title }}</a>{% endfor %}
+        </div>
+        {%- endfor %}
+        <div class="footer-col">
+          <h4>Elsewhere</h4>
+          <a href="{{ repo }}" target="_blank" rel="noopener">GitHub repository</a>
+          <a href="https://shoug-tech.com/" target="_blank" rel="noopener">shoug-tech.com</a>
+          <a href="https://shoug-tech.com/work/projects/" target="_blank" rel="noopener">All projects</a>
+          <a href="{{ 'privacy-notice/' | url }}">Privacy notice</a>
+          <a href="{{ 'academic-disclaimer/' | url }}">Academic disclaimer</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Shoug Alomran · CS331 · <a href="{{ 'copyright/' | url }}">All rights reserved</a></span>
+      <span class="status"><span class="pulse-dot"></span>1 lab · 2 projects · all links up/up</span>
+    </div>
+  </div>
+  <div class="footer-word" aria-hidden="true">SYN → SYN-ACK → ACK</div>
+</footer>
+
+<button class="icon-btn to-top" type="button" aria-label="Back to top">{{ i.icon("arrow-up") }}</button>
+
+<div class="lightbox" role="dialog" aria-modal="true" aria-label="Image preview" hidden>
+  <div class="lightbox-cap"></div>
+  <button class="icon-btn lightbox-close" type="button" aria-label="Close preview">{{ i.icon("x") }}</button>
+  <img alt="">
+</div>
+
+<div class="palette" role="dialog" aria-modal="true" aria-label="Search" hidden>
+  <div class="palette-backdrop" data-search-close></div>
+  <div class="palette-box">
+    <div class="palette-input">
+      {{ i.icon("search") }}
+      <input type="search" placeholder="Search pages, filters, commands…" autocomplete="off" spellcheck="false" aria-label="Search query">
+      <kbd>esc</kbd>
+    </div>
+    <div class="palette-results" role="listbox"></div>
+    <div class="palette-foot"><span><kbd>↑</kbd><kbd>↓</kbd> to move</span><span><kbd>↵</kbd> to open</span></div>
+  </div>
+</div>
+
+<script src="{{ 'assets/js/site.js' | url }}" defer></script>
+<script src="{{ 'assets/js/net.js' | url }}" defer></script>
+{%- for script in config.extra_javascript %}
+{{ script | script_tag }}
+{%- endfor %}
+{% block scripts %}{% endblock %}
+</body>
+</html>

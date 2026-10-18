@@ -1,0 +1,986 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lab 01 · Wireshark Packet Capture and Display Filtering · Shoug Alomran</title>
+<meta name="description" content="Animated presentation: Wireshark packet capture and display filtering on macOS, CS331 Lab 01.">
+<meta name="author" content="Shoug Fawaz Abdullah Alomran">
+<meta name="theme-color" content="#050508">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<script>
+  /* Theme before first paint: saved choice, else dark */
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem("cs331-theme"); } catch (e) {}
+    document.documentElement.setAttribute("data-theme", t === "light" ? "light" : "dark");
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap">
+<style>
+/* ==========================================================================
+   CS331 deck · self-contained (no build step, no frameworks)
+   Same design system as networks.shoug-tech.com (and the CS330 site):
+   #050508 ground, fine grid, cyan network accent, amber for replies and TTL.
+   Shoug Alomran
+   ========================================================================== */
+:root {
+  --bg: #050508;
+  --bg-2: #090a10;
+  --panel: rgba(12, 16, 24, 0.72);
+  --panel-solid: #0c1018;
+  --panel-2: #111623;
+  --line: #19202e;
+  --line-2: #263043;
+  --text: #e8edf5;
+  --muted: #97a3b6;
+  --dim: #5f6b7e;
+  --accent: #22d3ee;
+  --accent-2: #a5f3fc;
+  --accent-soft: rgba(34, 211, 238, 0.1);
+  --accent-line: rgba(34, 211, 238, 0.34);
+  --hot: #fbbf24;
+  --hot-soft: rgba(251, 191, 36, 0.1);
+  --hot-line: rgba(251, 191, 36, 0.32);
+  --good: #34d399;
+  --bad: #fb7185;
+  --grid: rgba(34, 211, 238, 0.045);
+  --glow: 0 0 0 1px rgba(34, 211, 238, 0.2), 0 20px 60px -20px rgba(34, 211, 238, 0.3);
+  --shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.85);
+  /* aliases used inside slide markup */
+  --cyan: var(--accent);
+  --violet: var(--hot);
+  --amber: var(--hot);
+  --green: var(--good);
+  --red: var(--bad);
+  --term-bg: #07090e;
+  --term-fg: #c9d4e3;
+  --node: #0c1018;
+  --l1: #22d3ee; --l2: #38bdf8; --l3: #34d399; --l4: #a3e635; --l5: #fbbf24; --l6: #fb923c; --l7: #fb7185;
+  --radius: 16px;
+  --display: "Space Grotesk", "Inter", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --sans: "Inter", "IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --top: 64px;
+  --foot: 64px;
+  color-scheme: dark;
+}
+:root[data-theme="light"] {
+  --bg: #f6f7fb;
+  --bg-2: #eef1f7;
+  --panel: rgba(255, 255, 255, 0.82);
+  --panel-solid: #ffffff;
+  --panel-2: #f3f5fa;
+  --line: #dfe4ee;
+  --line-2: #cad2e0;
+  --text: #0b1220;
+  --muted: #4a566b;
+  --dim: #7b879b;
+  --accent: #0e7490;
+  --accent-2: #155e75;
+  --accent-soft: rgba(14, 116, 144, 0.08);
+  --accent-line: rgba(14, 116, 144, 0.3);
+  --hot: #b45309;
+  --hot-soft: rgba(180, 83, 9, 0.08);
+  --hot-line: rgba(180, 83, 9, 0.3);
+  --good: #047857;
+  --bad: #be123c;
+  --grid: rgba(14, 116, 144, 0.06);
+  --glow: 0 0 0 1px rgba(14, 116, 144, 0.18), 0 20px 50px -24px rgba(14, 116, 144, 0.3);
+  --shadow: 0 24px 60px -30px rgba(15, 30, 60, 0.25);
+  --node: #ffffff;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  transition: background-color 0.4s, color 0.4s;
+}
+/* Fine grid + aurora, as on the site */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 120% 90% at 50% 30%, #000 30%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse 120% 90% at 50% 30%, #000 30%, transparent 85%);
+}
+body::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+  top: -40vh;
+  left: 50%;
+  width: 120vw;
+  height: 80vh;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side at 32% 55%, rgba(34, 211, 238, 0.14), transparent), radial-gradient(closest-side at 72% 45%, rgba(251, 191, 36, 0.06), transparent);
+  filter: blur(20px);
+}
+:root[data-theme="light"] body::after { opacity: 0.55; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.icon { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- Top bar (site header style) ---------- */
+.deck-top {
+  position: fixed; inset-block-start: 0; inset-inline: 0; z-index: 5;
+  height: var(--top);
+  display: flex; align-items: center; gap: 18px;
+  padding-inline: clamp(14px, 3vw, 32px);
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-block-end: 1px solid var(--line);
+}
+.brand { display: inline-flex; align-items: center; gap: 11px; color: var(--text); text-decoration: none !important; white-space: nowrap; }
+.brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(140deg, var(--accent), color-mix(in srgb, var(--accent) 45%, #000)); color: #021016; box-shadow: 0 6px 20px -6px var(--accent); }
+.brand-mark .icon { width: 18px; height: 18px; stroke-width: 2; }
+.brand-text { font: 500 14px/1 var(--mono); }
+.brand-text b { font-weight: 600; }
+.brand-text span { color: var(--dim); }
+.deck-top .ttl { flex: 1; min-width: 0; color: var(--dim); font: 500 12.5px/1 var(--mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tools { display: flex; gap: 8px; margin-inline-start: auto; }
+.tools button, .tools a {
+  display: inline-flex; align-items: center; gap: 7px;
+  height: 36px; padding: 0 12px; border-radius: 10px; cursor: pointer;
+  font: 500 12.5px/1 var(--mono); text-decoration: none !important;
+  background: var(--panel-solid); border: 1px solid var(--line-2); color: var(--muted);
+  transition: color 0.2s, border-color 0.2s, transform 0.2s;
+}
+.tools button:hover, .tools a:hover { color: var(--text); border-color: var(--accent-line); transform: translateY(-1px); }
+
+/* ---------- Slides ---------- */
+.deck { position: fixed; inset: 0; z-index: 1; }
+.slide {
+  position: absolute;
+  inset: var(--top) 0 var(--foot) 0;
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(18px, 4vh, 48px) clamp(16px, 5vw, 80px);
+  overflow-y: auto;
+  opacity: 0; visibility: hidden;
+  transform: translateX(40px);
+  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease), visibility 0s linear 0.55s;
+}
+[dir="rtl"] .slide { transform: translateX(-40px); }
+.slide.is-past { transform: translateX(-40px); }
+[dir="rtl"] .slide.is-past { transform: translateX(40px); }
+.slide.is-active { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.slide > .in { width: min(1200px, 100%); margin-block: auto; }
+
+/* Kicker: "— 01 · LABEL" with the status pill alongside */
+.eyebrow {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+  margin-block-end: 18px;
+  color: var(--accent);
+  font: 500 clamp(11.5px, 1.1vw, 13px)/1 var(--mono);
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+.eyebrow > span:first-child { display: inline-flex; align-items: center; gap: 12px; }
+.eyebrow > span:first-child::before { content: ""; width: 26px; height: 1px; background: currentColor; opacity: 0.7; }
+[style*="text-align:center"] .eyebrow > span:first-child::before { display: none; }
+.eyebrow .st {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--line-2); border-radius: 999px;
+  background: var(--panel);
+  color: var(--muted); letter-spacing: 0.04em; text-transform: none;
+}
+h1, h2, h3 { font-family: var(--display); margin: 0; }
+h1 { font-size: clamp(2.4rem, 6.4vw, 5.2rem); line-height: 1.02; font-weight: 600; letter-spacing: -0.035em; }
+h2 { font-size: clamp(1.9rem, 4.2vw, 3.3rem); line-height: 1.08; font-weight: 600; letter-spacing: -0.03em; margin-block-end: 0.5em; }
+h3 { font-size: clamp(1.05rem, 1.6vw, 1.35rem); font-weight: 600; letter-spacing: -0.01em; margin-block-end: 0.35em; }
+.grad {
+  background: linear-gradient(100deg, var(--accent-2) 0%, var(--accent) 45%, var(--hot) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: gradShift 8s ease-in-out infinite alternate;
+}
+@keyframes gradShift { to { background-position: 100% 0; } }
+.lead { font-size: clamp(1.05rem, 1.75vw, 1.4rem); line-height: 1.6; color: var(--muted); max-width: 44em; margin: 0 0 1em; }
+p { line-height: 1.65; }
+.big { font-size: clamp(1rem, 1.55vw, 1.25rem); line-height: 1.6; }
+.muted { color: var(--muted); }
+.dim { color: var(--dim); }
+code, .mono { font-family: var(--mono); }
+code { font-size: 0.86em; padding: 0.15em 0.45em; border-radius: 6px; background: var(--panel-2); border: 1px solid var(--line); color: var(--text); }
+strong { color: var(--text); font-weight: 600; }
+.ok { color: var(--good); } .bad { color: var(--bad); } .cy { color: var(--accent); } .vi { color: var(--hot); }
+kbd { padding: 2px 6px; border: 1px solid var(--line-2); border-radius: 5px; font: 500 0.85em var(--mono); }
+
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3.4vw, 56px); align-items: center; }
+.cols.w60 { grid-template-columns: 1.35fr 1fr; }
+@media (max-width: 880px) { .cols, .cols.w60 { grid-template-columns: 1fr; } }
+
+.card {
+  position: relative;
+  padding: clamp(16px, 2vw, 24px);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--panel);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+.card p { margin: 0.4em 0 0; color: var(--muted); font-size: clamp(0.92rem, 1.2vw, 1.02rem); }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+@media (max-width: 880px) { .grid3 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .grid3, .grid2 { grid-template-columns: 1fr; } }
+
+ul.pts { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+ul.pts li { position: relative; padding-inline-start: 28px; font-size: clamp(1rem, 1.5vw, 1.2rem); line-height: 1.55; color: var(--muted); }
+ul.pts li::before { content: ""; position: absolute; inset-inline-start: 4px; inset-block-start: 0.6em; width: 8px; height: 8px; border-radius: 2px; background: var(--accent); box-shadow: 0 0 10px var(--accent); transform: rotate(45deg); }
+
+/* Link LEDs */
+.led { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 3px color-mix(in srgb, var(--good) 18%, transparent), 0 0 10px var(--good); vertical-align: middle; flex: none; }
+.led.down { background: var(--bad); box-shadow: 0 0 0 3px color-mix(in srgb, var(--bad) 18%, transparent), 0 0 10px var(--bad); }
+.led.wait { background: var(--hot); box-shadow: 0 0 0 3px color-mix(in srgb, var(--hot) 18%, transparent), 0 0 10px var(--hot); }
+.is-active .led.blink { animation: blink 1.6s ease-in-out infinite; }
+@keyframes blink { 50% { opacity: 0.35; } }
+
+/* Stat strip (site .stats) */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin-block: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); overflow: hidden; }
+.stat { padding: 20px 22px; border-inline-start: 1px solid var(--line); }
+.stat:first-child { border-inline-start: 0; }
+.stat .n { display: block; font: 600 clamp(1.7rem, 3.4vw, 2.6rem)/1.05 var(--display); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.stat .l { display: block; margin-top: 8px; color: var(--dim); font: 500 11px/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; }
+@media (max-width: 640px) { .stat { border-inline-start: 0; border-block-start: 1px solid var(--line); } .stat:first-child { border-block-start: 0; } }
+
+/* Routing-table style */
+table.rt { width: 100%; border-collapse: separate; border-spacing: 0; font-size: clamp(0.85rem, 1.3vw, 1.02rem); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--panel); }
+table.rt th { font: 500 0.7em var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); text-align: start; padding: 13px 16px; background: var(--panel-2); border-block-end: 1px solid var(--line); }
+table.rt td { padding: 12px 16px; border-block-start: 1px solid var(--line); font-variant-numeric: tabular-nums; color: var(--muted); }
+table.rt td strong { color: var(--text); }
+table.rt td.m { font-family: var(--mono); color: var(--text); }
+table.rt tbody tr { transition: background-color 0.2s; }
+table.rt tbody tr:hover { background: var(--accent-soft); }
+table.rt tr.a td:first-child { box-shadow: inset 2px 0 0 var(--accent); }
+table.rt tr.b td:first-child { box-shadow: inset 2px 0 0 var(--hot); }
+table.rt tr.f td { color: var(--dim); }
+.tbl-wrap { overflow-x: auto; }
+.is-active table.rt.anim tbody tr { animation: row-in 0.55s var(--ease) both; animation-delay: calc(var(--i, 0) * 110ms + 200ms); }
+
+/* Terminal (site .machine) */
+.term { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line-2); background: var(--term-bg); box-shadow: var(--shadow), var(--glow); text-align: left; direction: ltr; }
+.term .bar { display: flex; align-items: center; gap: 7px; padding: 12px 16px; font: 500 12.5px/1 var(--mono); color: #6b778a; background: #0d111a; border-block-end: 1px solid #19202e; }
+.term .bar i { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; }
+.term .bar i + i { background: #febc2e; } .term .bar i + i + i { background: #28c840; }
+.term .bar b { margin-inline-start: 8px; font-weight: 500; color: #97a3b6; }
+.term pre { margin: 0; padding: 18px 20px; font: 400 clamp(0.72rem, 1.2vw, 0.95rem)/1.7 var(--mono); color: var(--term-fg); overflow-x: auto; }
+.term .ln { display: block; white-space: pre; }
+.term .p { color: #22d3ee; font-weight: 600; }
+.term .c { color: #5f6b7e; }
+.term .g { color: #34d399; } .term .r { color: #fb7185; }
+.is-active .term.type .ln { animation: ln-in 0.01s both; animation-delay: calc(var(--i, 0) * 260ms + 300ms); }
+@keyframes ln-in { from { visibility: hidden; } to { visibility: visible; } }
+.is-active .term.type .ln:last-child::after { content: ""; display: inline-block; width: 8px; height: 1.05em; vertical-align: text-bottom; background: #22d3ee; margin-inline-start: 2px; animation: blink 1s steps(1) infinite; }
+
+/* Device window (screenshots) */
+.win { margin: 0; border: 1px solid var(--line-2); border-radius: var(--radius); overflow: hidden; background: var(--panel-solid); box-shadow: var(--shadow); }
+.win .bar { display: flex; align-items: center; gap: 7px; padding: 11px 16px; font: 500 12.5px/1 var(--mono); color: var(--dim); background: var(--panel-2); border-block-end: 1px solid var(--line); }
+.win .bar i { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; }
+.win .bar i + i { background: #febc2e; } .win .bar i + i + i { background: #28c840; }
+.win .bar b { margin-inline-start: 8px; font-weight: 500; color: var(--muted); }
+.win img { display: block; width: 100%; height: auto; max-height: 56vh; object-fit: contain; background: var(--bg-2); }
+.win figcaption { display: flex; justify-content: space-between; gap: 12px; padding: 11px 16px; font: 500 13px/1.5 var(--mono); color: var(--muted); border-block-start: 1px solid var(--line); }
+.is-active .win.pop { animation: pop 0.7s var(--ease) both 0.15s; }
+@keyframes pop { from { opacity: 0; transform: translateY(18px) scale(0.98); } }
+
+/* Wireshark-style packet list */
+.wsk { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--panel); font: 400 clamp(0.66rem, 1.05vw, 0.85rem)/1.4 var(--mono); direction: ltr; text-align: left; }
+.wsk .fbar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg-2); border-block-end: 1px solid var(--line); }
+.wsk .fbar .lbl { color: var(--dim); }
+.wsk .fbar .flt { flex: 1; padding: 6px 12px; border-radius: 8px; border: 1px solid color-mix(in srgb, var(--good) 45%, var(--line-2)); background: color-mix(in srgb, var(--good) 8%, var(--panel-solid)); color: var(--text); min-height: 2em; overflow: hidden; white-space: nowrap; }
+.wsk .flt .tx { display: inline-block; overflow: hidden; vertical-align: bottom; }
+.wsk .row, .wsk .hd { display: grid; grid-template-columns: 3.4em 6.4em 1fr 1fr 5em 2fr; gap: 10px; padding: 8px 14px; white-space: nowrap; }
+.wsk .row > *, .wsk .hd > * { overflow: hidden; text-overflow: ellipsis; }
+.wsk .hd { color: var(--dim); letter-spacing: 0.06em; text-transform: uppercase; background: var(--panel-2); border-block-end: 1px solid var(--line); }
+.wsk .row { border-block-end: 1px solid var(--line); color: var(--muted); }
+.wsk .row:last-child { border-block-end: 0; }
+.wsk .row.http { background: color-mix(in srgb, var(--good) 9%, transparent); color: var(--text); }
+.wsk .row.dns { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+.wsk .row.icmp { background: color-mix(in srgb, var(--hot) 7%, transparent); color: var(--text); }
+.wsk .row.err { background: color-mix(in srgb, var(--bad) 9%, transparent); }
+.wsk .row.sel { box-shadow: inset 2px 0 0 var(--accent); background: var(--accent-soft); }
+.is-active .wsk .row { animation: row-in 0.5s var(--ease) both; animation-delay: calc(var(--i, 0) * 120ms + 250ms); }
+@keyframes row-in { from { opacity: 0; transform: translateX(-26px); } }
+.is-active .wsk.filtering .flt .tx { animation: type 0.9s steps(var(--chars, 4)) both 1.9s; }
+@keyframes type { from { width: 0; } }
+.is-active .wsk.filtering .row:not(.m) { animation: row-in 0.5s var(--ease) both, row-out 0.5s var(--ease) forwards; animation-delay: calc(var(--i, 0) * 120ms + 250ms), 3s; }
+@keyframes row-out { to { opacity: 0.14; filter: saturate(0); } }
+@media (max-width: 640px) { .wsk .row, .wsk .hd { grid-template-columns: 2.6em 1fr 1fr 4em; } .wsk .row > :nth-child(2), .wsk .hd > :nth-child(2), .wsk .row > :nth-child(6), .wsk .hd > :nth-child(6) { display: none; } }
+
+/* Lanes: horizontal packet path between devices */
+.lane { position: relative; height: 150px; margin-block: 10px; }
+.lane::before { content: ""; position: absolute; inset-inline: 6%; top: 50px; height: 2px; background: var(--accent-line); }
+.lane .nd { position: absolute; top: 18px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 7px; text-align: center; width: 9em; }
+.lane .dev { display: grid; place-items: center; min-width: 76px; height: 64px; padding-inline: 12px; border-radius: 12px; border: 1px solid var(--line-2); background: var(--node); font: 600 clamp(0.78rem, 1.25vw, 0.95rem) var(--mono); position: relative; }
+.lane .dev::after { content: ""; position: absolute; top: 7px; inset-inline-end: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--good); box-shadow: 0 0 8px var(--good); }
+.lane .router .dev { border-color: var(--hot-line); box-shadow: 0 0 24px -10px var(--hot); }
+.lane .nd small { font: 500 clamp(0.66rem, 1.05vw, 0.8rem)/1.35 var(--mono); color: var(--dim); }
+.lane .tick { position: absolute; top: 88px; transform: translateX(-50%); font: 500 0.78rem var(--mono); color: var(--hot); white-space: nowrap; }
+.lane .pk { position: absolute; top: 51px; z-index: 2; left: 6%; transform: translate(-50%, -50%); display: none; }
+.lane .pk .dot { display: block; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 16px var(--accent); }
+.lane .pk .lab { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); font: 500 0.78rem var(--mono); white-space: nowrap; padding: 5px 9px; border-radius: 8px; background: var(--panel-solid); border: 1px solid var(--line-2); box-shadow: var(--shadow); }
+.lane .pk .lab { display: grid; }
+.lane .pk .lab > span { grid-area: 1 / 1; display: grid; text-align: center; }
+.lane .pk .lab .k1 ~ .t1, .lane .pk .lab .k1 ~ .t2 { grid-area: 2 / 1; }
+.lane .pk .lab .fix { grid-area: 2 / 1; color: var(--accent); }
+.is-active .lane .pk { display: block; }
+@media (max-width: 640px) { .lane .nd { width: 6.2em; } .lane .nd small { font-size: 0.6rem; } .lane .dev { min-width: 56px; height: 52px; } .lane .pk .lab { font-size: 0.66rem; } }
+
+/* Ping with TTL: request L→R (0–45%), reply R→L (50–95%) over 7s */
+.is-active .lane.ping .pk { animation: ping-move 7s linear infinite 0.6s both; }
+.is-active .lane.ping .pk .dot { animation: ping-color 7s steps(1) infinite 0.6s both; }
+@keyframes ping-move {
+  0% { left: 6%; opacity: 0; } 3% { opacity: 1; } 45% { left: 94%; opacity: 1; } 48% { left: 94%; opacity: 0; }
+  50% { left: 94%; opacity: 0; } 53% { opacity: 1; } 95% { left: 6%; opacity: 1; } 98%, 100% { left: 6%; opacity: 0; }
+}
+@keyframes ping-color { 0% { background: var(--accent); box-shadow: 0 0 16px var(--accent); } 50% { background: var(--hot); box-shadow: 0 0 16px var(--hot); } }
+.is-active .lane.ping .t1 { animation: ttl-a 7s steps(1) infinite 0.6s both; }
+.is-active .lane.ping .t2 { animation: ttl-b 7s steps(1) infinite 0.6s both; }
+.is-active .lane.ping .k1 { animation: kind-a 7s steps(1) infinite 0.6s both; }
+.is-active .lane.ping .k2 { animation: kind-b 7s steps(1) infinite 0.6s both; }
+@keyframes ttl-a { 0% { opacity: 1; } 24.5% { opacity: 0; } 50% { opacity: 1; } 74.5% { opacity: 0; } }
+@keyframes ttl-b { 0% { opacity: 0; } 24.5% { opacity: 1; } 50% { opacity: 0; } 74.5% { opacity: 1; } }
+@keyframes kind-a { 0% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes kind-b { 0% { opacity: 0; } 50% { opacity: 1; } }
+.lane .t2 { color: var(--hot); }
+
+/* One-way hop path (lab): 4 nodes */
+.is-active .lane.hop .pk { animation: hop-move 6s linear infinite 0.5s both; }
+@keyframes hop-move { 0% { left: 6%; opacity: 0; } 4% { opacity: 1; } 92% { left: 94%; opacity: 1; } 96%, 100% { left: 94%; opacity: 0; } }
+.is-active .lane.hop .s1 { animation: hop-a 6s steps(1) infinite 0.5s both; }
+.is-active .lane.hop .s2 { animation: hop-b 6s steps(1) infinite 0.5s both; }
+@keyframes hop-a { 0% { opacity: 1; } 33% { opacity: 0; } }
+@keyframes hop-b { 0% { opacity: 0; } 33% { opacity: 1; } }
+
+/* Request/answer lane (DNS) */
+.is-active .lane.ask .pk { animation: ask-move 5s ease-in-out infinite 0.5s both; }
+@keyframes ask-move { 0% { left: 6%; opacity: 0; } 5% { opacity: 1; } 45% { left: 50%; } 55% { left: 50%; } 90% { left: 94%; opacity: 1; } 96%, 100% { left: 94%; opacity: 0; } }
+.lane.short { height: 118px; }
+
+/* Subnet split /24 → 4 × /26 */
+.split { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-family: var(--mono); }
+.split .blk { position: relative; padding: 20px 16px; min-height: 140px; border-radius: 14px; border: 1px solid var(--line); background: var(--panel); display: flex; flex-direction: column; justify-content: space-between; gap: 6px; }
+.split .blk::before { content: ""; position: absolute; top: -1px; left: 16px; right: 16px; height: 2px; border-radius: 2px; background: var(--c, var(--line-2)); }
+.split .blk b { font: 600 clamp(1.05rem, 1.8vw, 1.45rem) var(--display); }
+.split .blk span { font-size: clamp(0.72rem, 1.05vw, 0.86rem); color: var(--muted); line-height: 1.55; }
+.split .blk em { font-style: normal; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c, var(--dim)); }
+.split .a { --c: var(--accent); } .split .b { --c: var(--hot); } .split .f { border-style: dashed; }
+.split .whole { position: absolute; inset: 0; display: none; place-items: center; border-radius: 14px; border: 1px solid var(--accent-line); background: color-mix(in srgb, var(--accent) 8%, var(--bg)); font: 600 clamp(1.1rem, 2.4vw, 2rem) var(--mono); z-index: 2; box-shadow: var(--glow); }
+.is-active .split { animation: gap-open 0.9s var(--ease) both 1.6s; }
+@keyframes gap-open { from { gap: 0; } }
+.is-active .split .whole { display: grid; animation: whole-out 0.6s var(--ease) forwards 1.4s; }
+@keyframes whole-out { to { opacity: 0; transform: scaleY(0.9); visibility: hidden; } }
+.is-active .split .blk { animation: blk-in 0.6s var(--ease) both; animation-delay: calc(1.7s + var(--i) * 0.18s); }
+@keyframes blk-in { from { opacity: 0; transform: translateY(14px); } }
+@media (max-width: 640px) { .split { grid-template-columns: 1fr 1fr; } }
+.bits { font: 500 clamp(0.9rem, 1.7vw, 1.3rem) var(--mono); letter-spacing: 0.04em; margin-block: 16px 4px; word-break: break-all; color: var(--muted); }
+.bits .n { color: var(--muted); } .bits .s { color: var(--hot); font-weight: 600; } .bits .h { color: var(--accent); }
+
+/* Segmented bars (ICMP breakdown) */
+.seg { display: flex; height: 58px; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); font: 500 clamp(0.7rem, 1.15vw, 0.9rem) var(--mono); }
+.seg > div { display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 8px; flex: var(--w) 1 0; overflow: hidden; white-space: nowrap; border-inline-end: 1px solid var(--bg); }
+.is-active .seg > div { animation: seg-in 0.7s var(--ease) both; animation-delay: calc(var(--i, 0) * 0.25s + 0.3s); transform-origin: left center; }
+@keyframes seg-in { from { opacity: 0; transform: scaleX(0.4); } }
+.seg .s-req { background: color-mix(in srgb, var(--accent) 24%, transparent); }
+.seg .s-rep { background: color-mix(in srgb, var(--hot) 24%, transparent); }
+.seg .s-err { background: color-mix(in srgb, var(--bad) 26%, transparent); }
+.seg-legend { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-block-start: 12px; font: 500 13px var(--mono); color: var(--muted); }
+
+/* Ethernet frame header */
+.frame { display: grid; grid-template-columns: 6fr 6fr 2.4fr 8fr; gap: 6px; font-family: var(--mono); }
+.frame > div { padding: 14px 14px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); min-width: 0; }
+.frame em { display: block; font-style: normal; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); margin-block-end: 6px; }
+.frame b { display: block; font-size: clamp(0.72rem, 1.2vw, 1rem); word-break: break-all; }
+.frame .dst, .frame .src { box-shadow: inset 0 2px 0 var(--accent); }
+.frame .typ { box-shadow: inset 0 2px 0 var(--hot); } .frame .typ b { color: var(--hot); }
+.frame .pl { box-shadow: inset 0 2px 0 var(--good); }
+.is-active .frame > div { animation: blk-in 0.6s var(--ease) both; animation-delay: calc(var(--i) * 0.2s + 0.3s); }
+@media (max-width: 760px) { .frame { grid-template-columns: 1fr 1fr; } }
+
+/* Bars (RTT) */
+.bars { display: grid; gap: 16px; }
+.bars .bl { display: grid; grid-template-columns: 9.5em 1fr; gap: 12px; align-items: center; font: 500 clamp(0.8rem, 1.25vw, 1rem) var(--mono); }
+.bars .track { position: relative; height: 44px; border-radius: 10px; background: var(--panel-2); border: 1px solid var(--line); overflow: hidden; }
+.bars .fill { position: absolute; inset-block: 0; inset-inline-start: 0; width: var(--w); display: flex; align-items: center; justify-content: flex-end; padding-inline: 14px; font-weight: 600; border-radius: 10px; }
+.bars .fill.a { background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 12%, transparent), color-mix(in srgb, var(--accent) 45%, transparent)); }
+.bars .fill.b { background: linear-gradient(90deg, color-mix(in srgb, var(--hot) 12%, transparent), color-mix(in srgb, var(--hot) 45%, transparent)); }
+.is-active .bars .fill { animation: grow 1.3s var(--ease) both; animation-delay: calc(var(--i, 0) * 0.35s + 0.3s); }
+@keyframes grow { from { width: 0; } }
+@media (max-width: 560px) { .bars .bl { grid-template-columns: 1fr; gap: 4px; } }
+
+/* Port cards */
+.port { display: flex; align-items: center; gap: 16px; padding: 18px 20px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--panel); }
+.port .num { font: 600 clamp(1.8rem, 3.4vw, 2.6rem) var(--display); min-width: 2.6em; }
+.port .led { width: 12px; height: 12px; }
+.port.closed { border-color: color-mix(in srgb, var(--bad) 45%, var(--line)); }
+.port.open { border-color: color-mix(in srgb, var(--good) 45%, var(--line)); }
+.port small { display: block; font: 500 13px var(--mono); color: var(--dim); }
+
+.is-active .rv { animation: blk-in 0.7s var(--ease) both; animation-delay: calc(var(--d, 0) * 1ms + 150ms); }
+
+/* Incident */
+.incident { border: 1px solid color-mix(in srgb, var(--bad) 40%, var(--line)); border-radius: var(--radius); padding: clamp(18px, 2.4vw, 30px); background: linear-gradient(135deg, color-mix(in srgb, var(--bad) 9%, transparent), transparent 60%), var(--panel); }
+.incident .eyebrow { color: var(--bad); }
+
+/* Cable swap */
+.cable svg { width: 100%; height: auto; display: block; }
+.cable text { font: 13px var(--mono); fill: var(--text); }
+.cable text.s { fill: var(--dim); font-size: 11px; }
+.cable .box { fill: var(--node); stroke: var(--line-2); }
+.cable .box.r { stroke: var(--hot-line); }
+.cable .wrong { stroke: var(--bad); stroke-width: 3; stroke-dasharray: 8 6; fill: none; }
+.cable .right { stroke: var(--good); stroke-width: 3; fill: none; stroke-dasharray: 400; stroke-dashoffset: 0; filter: drop-shadow(0 0 5px var(--good)); }
+.cable .lw { fill: var(--bad); } .cable .lr { fill: var(--good); }
+.is-active .cable .wrong, .is-active .cable .lw { animation: fade-out 0.6s ease forwards 2.6s; }
+.is-active .cable .right { animation: draw 1.2s var(--ease) both 3.1s; }
+.is-active .cable .lr { animation: blk-in 0.4s both 4.1s; }
+.is-active .cable .tag-fix { animation: blk-in 0.6s both 4.2s; }
+@keyframes fade-out { to { opacity: 0.08; } }
+@keyframes draw { from { stroke-dashoffset: 400; } }
+
+/* Topology */
+.topo svg { width: 100%; height: auto; display: block; }
+.topo .link { stroke: var(--line-2); stroke-width: 2; }
+.topo .link.glow { stroke: var(--accent-line); stroke-width: 2.5; }
+.topo .node rect { fill: var(--node); stroke: var(--line-2); }
+.topo .node.router rect { stroke: var(--hot-line); }
+.topo .node.switch rect { stroke: var(--accent-line); }
+.topo text { font: 12px var(--mono); fill: var(--text); }
+.topo text.sub { fill: var(--dim); font-size: 10px; }
+.topo .ledc { fill: var(--good); }
+.topo .pkt { fill: var(--accent); filter: drop-shadow(0 0 6px var(--accent)); }
+.topo .pkt.rep { fill: var(--hot); filter: drop-shadow(0 0 6px var(--hot)); }
+.is-active .topo .nodes { animation: blk-in 0.7s both 0.1s; }
+
+/* Browser mock */
+.browser { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line-2); background: #fff; color: #111; box-shadow: var(--shadow); }
+.browser .url { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #e9ebf0; font: 13px var(--mono); color: #333; }
+.browser .url span { flex: 1; padding: 6px 10px; border-radius: 7px; background: #fff; border: 1px solid #d0d4dc; }
+.browser .page { padding: 28px 24px 36px; font-family: "Times New Roman", serif; }
+.browser .page h4 { margin: 0 0 10px; font-size: 2rem; }
+.browser .page p { margin: 0; font-size: 1.1rem; }
+
+/* Placeholder (Project 2) */
+.pending { display: grid; place-items: center; min-height: 34vh; border: 1px dashed var(--line-2); border-radius: var(--radius); font: 500 14px var(--mono); color: var(--dim); text-align: center; padding: 20px; background: var(--panel); }
+.pending b { display: block; color: var(--hot); letter-spacing: 0.14em; margin-block-end: 8px; }
+
+/* ---------- Footer: signature, packet progress wire, counter ---------- */
+.deck-foot {
+  position: fixed; inset-block-end: 0; inset-inline: 0; z-index: 5;
+  height: var(--foot);
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: clamp(12px, 2.4vw, 28px);
+  padding-inline: clamp(14px, 3vw, 32px);
+  padding-block-end: env(safe-area-inset-bottom);
+  font: 500 12.5px var(--mono); color: var(--muted);
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-block-start: 1px solid var(--line);
+}
+.deck-foot .sig { display: inline-flex; align-items: center; gap: 9px; }
+.deck-foot .sig::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 3px color-mix(in srgb, var(--good) 20%, transparent); }
+.deck-foot .sig b { color: var(--text); font-weight: 600; }
+.count { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.count b { color: var(--accent); font-size: 15px; }
+.wire { position: relative; height: 30px; direction: ltr; }
+.wire .ln, .wire .done { position: absolute; top: 50%; left: 0; height: 2px; transform: translateY(-50%); border-radius: 2px; }
+.wire .ln { right: 0; background: var(--line-2); }
+.wire .done { width: 0; background: linear-gradient(90deg, var(--accent), var(--hot)); transition: width 0.6s var(--ease); }
+.wire .stops { position: absolute; inset: 0; }
+.wire .stops button { position: absolute; top: 50%; width: 18px; height: 18px; margin: 0; padding: 0; transform: translate(-50%, -50%); border: 0; background: transparent; cursor: pointer; }
+.wire .stops button::before { content: ""; position: absolute; inset: 5px; border-radius: 2px; background: var(--bg); border: 1.5px solid var(--line-2); transform: rotate(45deg); transition: all 0.3s; }
+.wire .stops button.seen::before { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 35%, var(--bg)); }
+.wire .stops button:hover::before { border-color: var(--hot); transform: rotate(45deg) scale(1.3); }
+.wire .packet { position: absolute; top: 50%; left: 0; width: 26px; height: 12px; transform: translate(-50%, -50%); border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--hot)); box-shadow: 0 0 14px var(--accent); transition: left 0.6s var(--ease); pointer-events: none; }
+.wire .packet::after { content: ""; position: absolute; inset-block: 3px; inset-inline-start: 4px; width: 5px; border-radius: 1px; background: rgba(255, 255, 255, 0.75); }
+@media (max-width: 640px) {
+  :root { --foot: 58px; --top: 56px; }
+  .deck-top .ttl, .tools .lbl, .brand-text span { display: none; }
+  .deck-foot { gap: 10px; font-size: 11px; }
+  .wire .stops button { width: 12px; }
+}
+
+/* Prev / next */
+.navbtn { position: fixed; top: 50%; z-index: 4; width: 44px; height: 44px; margin-top: -22px; border-radius: 12px; border: 1px solid var(--line-2); background: var(--panel-solid); color: var(--muted); cursor: pointer; display: grid; place-items: center; opacity: 0.6; transition: opacity 0.2s, color 0.2s, border-color 0.2s; }
+.navbtn:hover { opacity: 1; color: var(--text); border-color: var(--accent-line); }
+.navbtn svg { width: 18px; height: 18px; }
+.navbtn.prev { inset-inline-start: 14px; } .navbtn.next { inset-inline-end: 14px; }
+[dir="rtl"] .navbtn svg { transform: scaleX(-1); }
+.navbtn[disabled] { opacity: 0.15; cursor: default; }
+@media (max-width: 880px), (hover: none) { .navbtn { display: none; } }
+
+.hint { position: fixed; inset-block-end: calc(var(--foot) + 12px); inset-inline-end: 20px; z-index: 4; font: 500 11px var(--mono); color: var(--dim); }
+@media (hover: none) { .hint { display: none; } }
+
+/* ---------- Reduced motion: final states, no movement ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
+  .slide { transform: none !important; }
+  .lane .pk { display: none !important; }
+  .split .whole { display: none !important; }
+  .wsk.filtering .row:not(.m) { opacity: 0.14; }
+  .cable .wrong, .cable .lw { opacity: 0.12; }
+  .topo .pkt { display: none; }
+}
+
+/* ---------- Print: one slide per page, footer on each ---------- */
+@media print {
+  @page { size: landscape; margin: 0; }
+  body { overflow: visible; }
+  body::before, body::after, .deck-top, .navbtn, .hint, .wire { display: none !important; }
+  .deck { position: static; }
+  .slide { position: relative; inset: auto; opacity: 1 !important; visibility: visible !important; transform: none !important; height: 100vh; page-break-after: always; break-after: page; overflow: hidden; }
+  .slide:last-child { page-break-after: auto; break-after: auto; }
+  .lane .pk { display: none !important; }
+  .split .whole { display: none !important; }
+  .deck-foot { position: fixed; background: transparent; }
+}
+
+[dir="rtl"] code, [dir="rtl"] .term, [dir="rtl"] .wsk, [dir="rtl"] .mono { direction: ltr; unicode-bidi: isolate; }
+</style>
+</head>
+<body>
+
+<header class="deck-top">
+  <a class="brand" href="../" target="_top" aria-label="CS331 network labs, back to the docs">
+    <span class="brand-mark"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg></span>
+    <span class="brand-text"><b>CS331</b> <span>/ lab-01</span></span>
+  </a>
+  <span class="ttl">Wireshark Packet Capture and Display Filtering</span>
+  <div class="tools">
+    <a href="../" target="_top"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg><span class="lbl">Docs</span></a>
+    <button id="themeBtn" type="button" aria-label="Toggle light or dark theme">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      <span class="lbl" id="themeLbl">Light</span>
+    </button>
+    <button id="fsBtn" type="button" aria-label="Toggle full screen">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+      <span class="lbl">Full screen</span>
+    </button>
+  </div>
+</header>
+
+<main class="deck" id="deck" aria-live="polite">
+<!-- 1 · Title -->
+<section class="slide" data-title="Title">
+  <div class="in">
+    <div class="eyebrow"><span>[ LAB 01 ]</span><span>CS331</span><span class="st"><span class="led blink"></span>Status: Operational</span></div>
+    <h1>Wireshark Packet Capture<br>and <span class="grad">Display Filtering</span></h1>
+    <p class="lead" style="margin-top:22px">Reading real packets off a MacBook's Wi-Fi interface, from the Ethernet header to the round-trip time.</p>
+    <div class="lane hop short" aria-hidden="true" style="margin-top:28px">
+      <div class="nd" style="left:6%"><div class="dev">Mac</div><small>.229</small></div>
+      <div class="nd router" style="left:35%"><div class="dev">GW</div><small>gateway</small></div>
+      <div class="nd" style="left:65%"><div class="dev">ISP</div><small>internet</small></div>
+      <div class="nd" style="left:94%"><div class="dev">Google</div><small>echo</small></div>
+      <div class="pk"><span class="dot"></span></div>
+    </div>
+    <div class="stats" style="margin-top:6px">
+      <div class="stat"><span class="l">Student</span><span class="mono" style="display:block;margin-top:6px">Shoug Fawaz Abdullah Alomran</span></div>
+      <div class="stat"><span class="l">Instructor</span><span class="mono" style="display:block;margin-top:6px">Ms. Nada ALALYANI</span></div>
+      <div class="stat"><span class="l">Term</span><span class="mono" style="display:block;margin-top:6px">261 · 2026–2027 · PSU</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · Setup -->
+<section class="slide" data-title="Same lab, different OS">
+  <div class="in">
+    <div class="eyebrow"><span>[ SETUP ]</span><span class="st">macOS · MacBook Air M2</span></div>
+    <h2>Same lab, <span class="grad">different OS</span></h2>
+    <p class="lead">The lab sheet was written for Windows. I did it on macOS with the equivalent commands.</p>
+    <div class="tbl-wrap">
+      <table class="rt anim">
+        <thead><tr><th>Lab sheet (Windows)</th><th>Used on macOS</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr style="--i:0"><td class="m">ipconfig /all</td><td class="m cy">ifconfig en0</td><td>MAC and IPv4 of the Wi-Fi interface</td></tr>
+          <tr style="--i:1"><td class="m">ping -4</td><td class="m cy">ping -c 4</td><td>Four echoes, then stop</td></tr>
+          <tr style="--i:2"><td class="m">—</td><td class="m cy">Private Wi-Fi Address: Off</td><td>Show the real hardware MAC, not a random one</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · Interface -->
+<section class="slide" data-title="Interface en0">
+  <div class="in cols">
+    <div>
+      <div class="eyebrow"><span>[ L2 · L3 ]</span><span class="st"><span class="led"></span>en0 active</span></div>
+      <h2>Capturing on <span class="grad">en0</span></h2>
+      <div class="stats" style="grid-template-columns:1fr">
+        <div class="stat rv" style="--d:100"><span class="l">IPv4 · Layer 3</span><span class="n mono" style="font-size:clamp(1.4rem,3vw,2.2rem)">192.168.1.229</span></div>
+        <div class="stat rv" style="--d:350"><span class="l">MAC · Layer 2 · redacted</span><span class="n mono" style="font-size:clamp(1.4rem,3vw,2.2rem)">a8:8f:d9:xx:xx:xx</span></div>
+      </div>
+    </div>
+    <div class="term type">
+      <div class="bar"><i></i><i></i><i></i><b>zsh · MacBook Air</b></div>
+      <pre><span class="ln" style="--i:0"><span class="p">% </span>ifconfig en0</span><span class="ln" style="--i:1">en0: flags=8863&lt;UP,BROADCAST,RUNNING&gt; mtu 1500</span><span class="ln" style="--i:2">	ether <span class="g">a8:8f:d9:xx:xx:xx</span></span><span class="ln" style="--i:3">	inet <span class="g">192.168.1.229</span> netmask 0xffffff00</span><span class="ln" style="--i:4">	status: active</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · Display filter concept -->
+<section class="slide" data-title="Capture all, display some">
+  <div class="in">
+    <div class="eyebrow"><span>[ DISPLAY FILTERS ]</span></div>
+    <h2>Capture everything. <span class="grad">Display what matters.</span></h2>
+    <div class="wsk filtering" style="--chars:4">
+      <div class="fbar"><span class="lbl">Apply a display filter …</span><span class="flt"><span class="tx">http</span></span></div>
+      <div class="hd"><span>No.</span><span>Time</span><span>Source</span><span>Destination</span><span>Proto</span><span>Info</span></div>
+      <div class="row dns" style="--i:0"><span>1</span><span>0.000</span><span>192.168.1.229</span><span>local DNS</span><span>DNS</span><span>Standard query A neverssl.com</span></div>
+      <div class="row dns" style="--i:1"><span>2</span><span>0.021</span><span>local DNS</span><span>192.168.1.229</span><span>DNS</span><span>Standard query response A neverssl.com</span></div>
+      <div class="row tcp" style="--i:2"><span>3</span><span>0.034</span><span>192.168.1.229</span><span>neverssl.com</span><span>TCP</span><span>→ 80 [SYN]</span></div>
+      <div class="row tcp" style="--i:3"><span>4</span><span>0.120</span><span>neverssl.com</span><span>192.168.1.229</span><span>TCP</span><span>80 → [SYN, ACK]</span></div>
+      <div class="row tcp" style="--i:4"><span>5</span><span>0.121</span><span>192.168.1.229</span><span>neverssl.com</span><span>TCP</span><span>[ACK]</span></div>
+      <div class="row http m" style="--i:5"><span>6</span><span>0.122</span><span>192.168.1.229</span><span>neverssl.com</span><span>HTTP</span><span>HEAD / HTTP/1.1</span></div>
+      <div class="row http m" style="--i:6"><span>7</span><span>0.208</span><span>neverssl.com</span><span>192.168.1.229</span><span>HTTP</span><span>HTTP/1.1 200 OK</span></div>
+      <div class="row tcp" style="--i:7"><span>8</span><span>0.209</span><span>192.168.1.229</span><span>neverssl.com</span><span>TCP</span><span>[ACK]</span></div>
+    </div>
+    <p class="dim mono" style="font-size:13px;margin-top:10px">Illustrative rows. Names are shown in place of server addresses. The filter only hides rows, the capture is unchanged.</p>
+  </div>
+</section>
+
+<!-- 5 · Six filters -->
+<section class="slide" data-title="Six filters">
+  <div class="in">
+    <div class="eyebrow"><span>[ L3 · L7 ]</span><span class="st">6 filters · 1 capture</span></div>
+    <h2>Six filters, <span class="grad">one capture</span></h2>
+    <div class="grid3">
+      <div class="card rv" style="--d:0"><code>http</code><p class="muted">Only HTTP: the request and the <strong>200 OK</strong>.</p></div>
+      <div class="card rv" style="--d:120"><code>ip.addr == 192.168.1.229</code><p class="muted">To <strong>or</strong> from my Mac.</p></div>
+      <div class="card rv" style="--d:240"><code>ip.src == 192.168.1.229</code><p class="muted">Only what my Mac <strong>sent</strong>.</p></div>
+      <div class="card rv" style="--d:360"><code>ip.dst == 192.168.1.229</code><p class="muted">Only what my Mac <strong>received</strong>.</p></div>
+      <div class="card rv" style="--d:480"><code>ip.dst == 192.168.1.229 and http</code><p class="muted">Both conditions: HTTP coming <strong>in</strong>.</p></div>
+      <div class="card rv" style="--d:600"><code>dns or http</code><p class="muted">Either one: each lookup next to its request.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · Screenshot: http filter -->
+<section class="slide" data-title="http filter">
+  <div class="in">
+    <div class="eyebrow"><span>[ L7 · HTTP ]</span><span class="st">filter: http</span></div>
+    <figure class="win pop">
+      <div class="bar"><i></i><i></i><i></i><b>Wireshark · en0 · http</b></div>
+      <img src="../assets/05-filter-http.png" alt="Wireshark with the http display filter applied">
+      <figcaption>The <code>http</code> filter leaves only the <code>HEAD /</code> request and the <code>200 OK</code> response.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 7 · HTTPS-only PSU -->
+<section class="slide" data-title="HTTPS-only">
+  <div class="in cols">
+    <div>
+      <div class="eyebrow"><span>[ L4 · L7 ]</span><span class="st">www.psu.edu.sa</span></div>
+      <h2>PSU only speaks <span class="grad">HTTPS</span></h2>
+      <p class="big muted">Port 80 does not answer, so <code>curl</code> timed out. HTTPS is encrypted, so the <code>http</code> filter has nothing to show.</p>
+      <p class="big muted">For plain HTTP I used <strong>neverssl.com</strong>.</p>
+    </div>
+    <div style="display:grid;gap:14px">
+      <div class="port closed rv" style="--d:100"><span class="led down"></span><span class="num mono">:80</span><div><strong>HTTP</strong><small>53 SYNs, 0 replies · curl timed out</small></div></div>
+      <div class="port open rv" style="--d:300"><span class="led"></span><span class="num mono">:443</span><div><strong>HTTPS</strong><small>open · TLS, unreadable to the http filter</small></div></div>
+      <div class="term type rv" style="--d:500">
+        <div class="bar"><i></i><i></i><i></i><b>zsh · curl</b></div>
+        <pre><span class="ln" style="--i:2"><span class="p">% </span>curl -I http://neverssl.com</span><span class="ln" style="--i:4"><span class="g">HTTP/1.1 200 OK</span></span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · DNS -->
+<section class="slide" data-title="DNS answers">
+  <div class="in">
+    <div class="eyebrow"><span>[ L7 · DNS ]</span><span class="st">google.com.sa</span></div>
+    <h2>One name, <span class="grad">two correct answers</span></h2>
+    <div class="lane ask short" aria-label="Local resolver answered 172.217.17.35">
+      <div class="nd" style="left:6%"><div class="dev">Mac</div><small>nslookup</small></div>
+      <div class="nd" style="left:50%"><div class="dev">Local</div><small>192.168.1.1</small></div>
+      <div class="nd" style="left:94%"><div class="dev mono" style="font-size:clamp(0.7rem,1.2vw,0.9rem)">172.217.17.35</div><small>answer</small></div>
+      <div class="pk"><span class="dot"></span></div>
+    </div>
+    <div class="lane ask short" aria-label="8.8.8.8 answered 142.250.203.3">
+      <div class="nd" style="left:6%"><div class="dev">Mac</div><small>nslookup</small></div>
+      <div class="nd router" style="left:50%"><div class="dev">8.8.8.8</div><small>anycast</small></div>
+      <div class="nd" style="left:94%"><div class="dev mono" style="font-size:clamp(0.7rem,1.2vw,0.9rem)">142.250.203.3</div><small>answer</small></div>
+      <div class="pk"><span class="dot" style="background:var(--violet);box-shadow:0 0 16px var(--violet)"></span></div>
+    </div>
+    <ul class="pts" style="margin-top:8px">
+      <li><strong>Many front ends.</strong> Google serves the same site from many addresses.</li>
+      <li><strong>Answer depends on who asks.</strong> Each resolver gets a server near where it seems to be. The ping used the local answer, 172.217.17.35.</li>
+      <li><strong>Anycast.</strong> 8.8.8.8 is one address announced from many sites. The nearest one answers.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 9 · ICMP breakdown -->
+<section class="slide" data-title="ICMP: 10 packets">
+  <div class="in">
+    <div class="eyebrow"><span>[ L3 · ICMP ]</span><span class="st">ping -c 4 google.com.sa → 172.217.17.35</span></div>
+    <h2><span class="grad">10</span> ICMP packets, not 8</h2>
+    <div class="seg" role="img" aria-label="4 echo requests, 4 echo replies, 2 port unreachable">
+      <div class="s-req" style="--w:4;--i:0">4 × echo request</div>
+      <div class="s-rep" style="--w:4;--i:1">4 × echo reply</div>
+      <div class="s-err" style="--w:2;--i:2">2 × port unreachable</div>
+    </div>
+    <div class="seg-legend"><span><span class="led" style="background:var(--cyan);box-shadow:0 0 8px var(--cyan)"></span> from me</span><span><span class="led" style="background:var(--violet);box-shadow:0 0 8px var(--violet)"></span> from Google</span><span><span class="led down"></span> from me, error report</span></div>
+    <div class="stats">
+      <div class="stat rv" style="--d:900"><span class="n cy">6</span><span class="l">Source = 192.168.1.229</span></div>
+      <div class="stat rv" style="--d:1050"><span class="n vi">4</span><span class="l">Source = 172.217.17.35</span></div>
+    </div>
+    <p class="big muted">The two port unreachables are not part of the ping. My Mac sent them for UDP that arrived on closed ports: a late DNS reply from 192.168.1.1 (frame 321) and a packet from a Cloudflare address (frame 419).</p>
+  </div>
+</section>
+
+<!-- 10 · Screenshot: icmp filter -->
+<section class="slide" data-title="icmp filter">
+  <div class="in">
+    <div class="eyebrow"><span>[ L3 · ICMP ]</span><span class="st">filter: icmp</span></div>
+    <figure class="win pop">
+      <div class="bar"><i></i><i></i><i></i><b>Wireshark · en0 · icmp</b></div>
+      <img src="../assets/14-filter-icmp.png" alt="Wireshark with the icmp display filter applied, 10 packets">
+      <figcaption>8 echo packets and 2 destination unreachable (port unreachable).</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 11 · Hop-by-hop MAC -->
+<section class="slide" data-title="Hop-by-hop MAC">
+  <div class="in">
+    <div class="eyebrow"><span>[ L2 vs L3 ]</span><span class="st">frame 228 · first echo request</span></div>
+    <h2>MAC is <span class="grad">hop-by-hop</span>. IP is end-to-end.</h2>
+    <div class="lane hop" style="height:170px;margin-top:40px">
+      <div class="nd" style="left:6%"><div class="dev">Mac</div><small>a8:8f:d9:…</small></div>
+      <div class="nd router" style="left:35%"><div class="dev">GW</div><small>192.168.1.1</small></div>
+      <div class="nd" style="left:65%"><div class="dev">…</div><small>more hops</small></div>
+      <div class="nd" style="left:94%"><div class="dev">Google</div><small>172.217.17.35</small></div>
+      <div class="tick" style="left:35%;top:118px">new frame · TTL −1</div>
+      <div class="pk"><span class="dot"></span><span class="lab"><span class="s1">dst MAC 24:5a:4c:81:24:16 · TTL 64</span><span class="s2">dst MAC: next router · TTL 63</span><span class="fix">dst IP: 172.217.17.35 (unchanged)</span></span></div>
+    </div>
+    <ul class="pts">
+      <li>Frame 228's destination MAC is <strong>the router</strong>, not Google. Google isn't on my Wi-Fi, so my Mac can only hand the frame to the gateway.</li>
+      <li>Each router builds a <strong>new frame</strong> for the next link. The IP addresses stay the same the whole way.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 12 · Frame header -->
+<section class="slide" data-title="Ethernet header">
+  <div class="in">
+    <div class="eyebrow"><span>[ L2 · ETHERNET II ]</span><span class="st">frame 228</span></div>
+    <h2>Reading the <span class="grad">Ethernet header</span></h2>
+    <div class="frame">
+      <div class="dst" style="--i:0"><em>Destination · 6 B</em><b>24:5a:4c:81:24:16</b><span class="dim mono" style="font-size:12px">gateway · 192.168.1.1</span></div>
+      <div class="src" style="--i:1"><em>Source · 6 B</em><b>a8:8f:d9:xx:xx:xx</b><span class="dim mono" style="font-size:12px">my Mac</span></div>
+      <div class="typ" style="--i:2"><em>Type</em><b style="color:var(--amber)">0x0800</b><span class="dim mono" style="font-size:12px">IPv4</span></div>
+      <div class="pl" style="--i:3"><em>Payload</em><b>IPv4 → ICMP echo request</b><span class="dim mono" style="font-size:12px">192.168.1.229 → 172.217.17.35</span></div>
+    </div>
+    <p class="big muted" style="margin-top:22px"><strong>EtherType 0x0800</strong> tells the receiver that the payload is IPv4 and should go up to the IP layer.</p>
+    <figure class="win pop" style="margin-top:12px">
+      <div class="bar"><i></i><i></i><i></i><b>Wireshark · Frame 228 · Ethernet II</b></div>
+      <img src="../assets/17-frame-228.png" alt="Frame 228 Ethernet II details in Wireshark" style="max-height:30vh">
+    </figure>
+  </div>
+</section>
+
+<!-- 13 · RTT -->
+<section class="slide" data-title="RTT">
+  <div class="in">
+    <div class="eyebrow"><span>[ L3 · TIMING ]</span><span class="st">same echo, two clocks</span></div>
+    <h2>78.52 ms on the wire, <span class="grad">121.913 ms</span> in ping</h2>
+    <div class="wsk" style="margin-bottom:18px">
+      <div class="hd"><span>No.</span><span>Time</span><span>Source</span><span>Destination</span><span>Proto</span><span>Info</span></div>
+      <div class="row icmp sel" style="--i:0"><span>228</span><span>10.013828</span><span>192.168.1.229</span><span>172.217.17.35</span><span>ICMP</span><span>Echo (ping) request</span></div>
+      <div class="row icmp" style="--i:1"><span>230</span><span>10.092348</span><span>172.217.17.35</span><span>192.168.1.229</span><span>ICMP</span><span>Echo (ping) reply</span></div>
+    </div>
+    <div class="bars">
+      <div class="bl"><span>Wireshark</span><div class="track"><div class="fill a" style="--w:64.4%;--i:0">78.52 ms</div></div></div>
+      <div class="bl"><span>ping</span><div class="track"><div class="fill b" style="--w:100%;--i:1">121.913 ms</div></div></div>
+    </div>
+    <p class="big muted" style="margin-top:18px">Wireshark stamps packets <strong>at the interface</strong>. <code>ping</code> times from <strong>inside the app</strong>, so it also counts the kernel, socket buffers and process scheduling. The extra 43 ms is spent inside the Mac, and only on the first echo: the next three differ by about 2 ms.</p>
+  </div>
+</section>
+
+<!-- 14 · Findings -->
+<section class="slide" data-title="Findings">
+  <div class="in">
+    <div class="eyebrow"><span>[ FINDINGS ]</span><span class="st"><span class="led"></span>all objectives met</span></div>
+    <h2>What the capture <span class="grad">showed</span></h2>
+    <div class="grid2">
+      <div class="card rv" style="--d:0"><h3>HTTPS hides HTTP</h3><p class="muted">PSU: 53 SYNs to port 80, no reply. neverssl.com gave a readable <code>200 OK</code>.</p></div>
+      <div class="card rv" style="--d:120"><h3>DNS depends on who asks</h3><p class="muted">172.217.17.35 locally, 142.250.203.3 via 8.8.8.8. Both are correct.</p></div>
+      <div class="card rv" style="--d:240"><h3>10 ICMP, not 8</h3><p class="muted">4 + 4 echo, plus 2 port unreachable from my Mac.</p></div>
+      <div class="card rv" style="--d:360"><h3>Gateway MAC, Google IP</h3><p class="muted">Frame 228 went to 24:5a:4c:81:24:16 but was addressed to 172.217.17.35. 0x0800 = IPv4.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 · End -->
+<section class="slide" data-title="End">
+  <div class="in" style="text-align:center">
+    <div class="eyebrow" style="justify-content:center"><span>[ EOF ]</span><span class="st"><span class="led blink"></span>Connection closed gracefully</span></div>
+    <h1>Thank <span class="grad">you</span></h1>
+    <p class="lead" style="margin:20px auto">Questions?</p>
+    <p class="mono dim">Shoug Fawaz Abdullah Alomran · CS331 · Ms. Nada ALALYANI</p>
+    <p class="mono" style="margin-top:22px"><a href="../">Read the full write-up &rarr;</a></p>
+  </div>
+</section>
+</main>
+
+<button class="navbtn prev" id="prevBtn" type="button" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 5l-7 7 7 7"/></svg></button>
+<button class="navbtn next" id="nextBtn" type="button" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 5l7 7-7 7"/></svg></button>
+<div class="hint" aria-hidden="true"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate · <kbd>F</kbd> full screen · <kbd>T</kbd> theme</div>
+
+<footer class="deck-foot">
+  <span class="sig"><b>Shoug Alomran</b> · CS331</span>
+  <div class="wire" aria-label="Slide progress">
+    <div class="ln"></div><div class="done" id="wireDone"></div>
+    <div class="stops" id="stops"></div>
+    <div class="packet" id="packet"></div>
+  </div>
+  <span class="count" aria-label="Slide number"><b id="cur">01</b> / <span id="tot">00</span></span>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var root = document.documentElement;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total = slides.length, cur = -1;
+  var $ = function (id) { return document.getElementById(id); };
+  var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+
+  /* ---------- Theme ---------- */
+  function applyThemeLabel() {
+    $("themeLbl").textContent = root.getAttribute("data-theme") === "light" ? "Dark" : "Light";
+  }
+  $("themeBtn").addEventListener("click", function () {
+    var t = root.getAttribute("data-theme") === "light" ? "dark" : "light";
+    root.setAttribute("data-theme", t);
+    try { localStorage.setItem("cs331-theme", t); } catch (e) {}
+    applyThemeLabel();
+  });
+  applyThemeLabel();
+
+  /* ---------- Full screen ---------- */
+  var fsOk = !!(root.requestFullscreen || root.webkitRequestFullscreen);
+  function toggleFs() {
+    if (!fsOk) return;
+    var on = document.fullscreenElement || document.webkitFullscreenElement;
+    if (on) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    else (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+  }
+  if (!fsOk) $("fsBtn").style.display = "none";
+  $("fsBtn").addEventListener("click", toggleFs);
+
+  /* ---------- Progress wire ---------- */
+  $("tot").textContent = pad(total);
+  var stops = $("stops");
+  slides.forEach(function (s, i) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.style.left = (total > 1 ? (i / (total - 1)) * 100 : 0) + "%";
+    b.setAttribute("aria-label", "Go to slide " + (i + 1) + (s.dataset.title ? ": " + s.dataset.title : ""));
+    b.title = (i + 1) + (s.dataset.title ? " · " + s.dataset.title : "");
+    b.addEventListener("click", function (e) { e.stopPropagation(); go(i); });
+    stops.appendChild(b);
+  });
+
+  /* ---------- Navigation ---------- */
+  function go(i) {
+    i = Math.max(0, Math.min(total - 1, i));
+    if (i === cur) return;
+    cur = i;
+    slides.forEach(function (s, k) {
+      var on = k === i;
+      s.classList.toggle("is-active", on);
+      s.classList.toggle("is-past", k < i);
+      s.setAttribute("aria-hidden", on ? "false" : "true");
+      if ("inert" in s) s.inert = !on;
+    });
+    var pct = total > 1 ? (i / (total - 1)) * 100 : 100;
+    $("packet").style.left = pct + "%";
+    $("wireDone").style.width = pct + "%";
+    Array.prototype.forEach.call(stops.children, function (b, k) { b.classList.toggle("seen", k <= i); });
+    $("cur").textContent = pad(i + 1);
+    $("prevBtn").disabled = i === 0;
+    $("nextBtn").disabled = i === total - 1;
+    slides[i].scrollTop = 0;
+    // Restart SMIL animations inside the slide
+    slides[i].querySelectorAll("svg").forEach(function (svg) {
+      if (reduce.matches) { if (svg.pauseAnimations) svg.pauseAnimations(); return; }
+      if (svg.setCurrentTime) { svg.setCurrentTime(0); svg.unpauseAnimations(); }
+    });
+    try { history.replaceState(null, "", "#" + (i + 1)); } catch (e) {}
+  }
+  function next() { go(cur + 1); }
+  function prev() { go(cur - 1); }
+  $("nextBtn").addEventListener("click", next);
+  $("prevBtn").addEventListener("click", prev);
+
+  document.addEventListener("keydown", function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var rtl = root.dir === "rtl";
+    switch (e.key) {
+      case "ArrowRight": rtl ? prev() : next(); break;
+      case "ArrowLeft": rtl ? next() : prev(); break;
+      case "ArrowDown": case "PageDown": case " ": case "Enter": next(); break;
+      case "ArrowUp": case "PageUp": case "Backspace": prev(); break;
+      case "Home": go(0); break;
+      case "End": go(total - 1); break;
+      case "f": case "F": toggleFs(); return;
+      case "t": case "T": $("themeBtn").click(); return;
+      default: return;
+    }
+    e.preventDefault();
+  });
+
+  // Click: right three quarters → next, left quarter → previous
+  $("deck").addEventListener("click", function (e) {
+    if (e.target.closest("a, button, input, select, textarea, summary, .term, .win, table, [data-noclick]")) return;
+    if (window.getSelection && String(window.getSelection())) return;
+    var x = e.clientX / window.innerWidth;
+    if (root.dir === "rtl") x = 1 - x;
+    x < 0.25 ? prev() : next();
+  });
+
+  // Swipe
+  var tx = 0, ty = 0, tt = 0;
+  document.addEventListener("touchstart", function (e) {
+    var t = e.changedTouches[0]; tx = t.clientX; ty = t.clientY; tt = Date.now();
+  }, { passive: true });
+  document.addEventListener("touchend", function (e) {
+    var t = e.changedTouches[0], dx = t.clientX - tx, dy = t.clientY - ty;
+    if (Date.now() - tt > 800 || Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.3) return;
+    var fwd = dx < 0; if (root.dir === "rtl") fwd = !fwd;
+    fwd ? next() : prev();
+  }, { passive: true });
+
+  window.addEventListener("hashchange", function () {
+    var n = parseInt(location.hash.slice(1), 10);
+    if (n) go(n - 1);
+  });
+
+
+  /* ---------- Start ---------- */
+  var start = parseInt(location.hash.slice(1), 10);
+  go(start ? start - 1 : 0);
+})();
+</script>
+</body>
+</html>
