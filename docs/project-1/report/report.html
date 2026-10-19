@@ -7,7 +7,11 @@
 <meta name="description" content="Animated presentation: subnetting 199.19.30.0/24 and configuring a Cisco 2901 router in Packet Tracer, CS331 Project 1.">
 <meta name="author" content="Shoug Fawaz Abdullah Alomran">
 <meta name="theme-color" content="#050508">
+<link rel="icon" href="../../favicon.ico" sizes="48x48">
 <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<meta property="og:image" content="https://network.shoug-tech.com/og-banner.png">
+<meta name="twitter:card" content="summary_large_image">
 <script>
   /* Theme before first paint: saved choice, else dark */
   (function () {
@@ -22,7 +26,7 @@
 <style>
 /* ==========================================================================
    CS331 deck · self-contained (no build step, no frameworks)
-   Same design system as networks.shoug-tech.com (and the CS330 site):
+   Same design system as network.shoug-tech.com (and the CS330 site):
    #050508 ground, fine grid, cyan network accent, amber for replies and TTL.
    Shoug Alomran
    ========================================================================== */
@@ -578,7 +582,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 1 · Title -->
 <section class="slide" data-title="Title">
   <div class="in">
-    <div class="eyebrow"><span>[ PROJECT 1 ]</span><span>CS331</span><span class="st"><span class="led blink"></span>Status: Operational · all links up</span></div>
+    <div class="eyebrow"><span>PROJECT 1</span><span>CS331</span><span class="st"><span class="led blink"></span>Status: Operational · all links up</span></div>
     <h1>Switch and Router<br><span class="grad">Network Design</span></h1>
     <p class="lead" style="margin-top:22px">Two LANs, one Cisco 2901 router, a subnetted /24, and a web page served across the router in Cisco Packet Tracer.</p>
     <div class="stats">
@@ -592,13 +596,13 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 2 · Brief -->
 <section class="slide" data-title="The build">
   <div class="in">
-    <div class="eyebrow"><span>[ L1 · DEVICES ]</span><span class="st">7 devices</span></div>
+    <div class="eyebrow"><span>L1 · DEVICES</span><span class="st">7 devices</span></div>
     <h2>The <span class="grad">build</span></h2>
     <div class="grid3">
       <div class="card rv" style="--d:0"><span class="led"></span> <strong class="mono">R1</strong><p class="muted">Cisco 2901 router. G0/0 → Network A, G0/1 → Network B.</p></div>
       <div class="card rv" style="--d:150"><span class="led"></span> <strong class="mono">Switch1 · Switch2</strong><p class="muted">Two Cisco 2960 switches, one per LAN.</p></div>
       <div class="card rv" style="--d:300"><span class="led"></span> <strong class="mono">PC A · PC B</strong><p class="muted">Hosts on Network A.</p></div>
-      <div class="card rv" style="--d:450"><span class="led"></span> <strong class="mono">PC1 · PC2</strong><p class="muted">PC 1 and PC 2, hosts on Network B.</p></div>
+      <div class="card rv" style="--d:450"><span class="led"></span> <strong class="mono">PC1 · PC2</strong><p class="muted">PC1 and PC2, hosts on Network B.</p></div>
       <div class="card rv" style="--d:600"><span class="led"></span> <strong class="mono">Web Server</strong><p class="muted">Server 1: HTTP and HTTPS, with a custom page.</p></div>
       <div class="card rv" style="--d:750"><span class="led"></span> <strong class="mono">199.19.30.0/24</strong><p class="muted">The block to subnet.</p></div>
     </div>
@@ -608,7 +612,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 3 · Topology -->
 <section class="slide" data-title="Topology">
   <div class="in">
-    <div class="eyebrow"><span>[ L1 · L2 · TOPOLOGY ]</span><span class="st"><span class="led blink"></span>HTTP · PC B → R1 → Server 1</span></div>
+    <div class="eyebrow"><span>L1 · L2 · TOPOLOGY</span><span class="st"><span class="led blink"></span>HTTP · PC B → R1 → Server 1</span></div>
     <div class="topo card" style="padding:10px">
       <svg viewBox="0 0 760 320" role="img" aria-label="R1 G0/0 to Switch1 with PC A and PC B. R1 G0/1 to Switch2 with PC1, PC2 and the Web Server.">
         <defs><linearGradient id="tg" x1="0" x2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>
@@ -646,7 +650,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 4 · Subnet split -->
 <section class="slide" data-title="/24 → four /26">
   <div class="in">
-    <div class="eyebrow"><span>[ L3 · SUBNETTING ]</span><span class="st">borrow 2 bits</span></div>
+    <div class="eyebrow"><span>L3 · SUBNETTING</span><span class="st">borrow 2 bits</span></div>
     <h2>One /24 becomes <span class="grad">four /26</span></h2>
     <div class="split">
       <div class="whole">199.19.30.0 /24 · 256 addresses</div>
@@ -663,7 +667,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 5 · Math -->
 <section class="slide" data-title="The math">
   <div class="in">
-    <div class="eyebrow"><span>[ L3 · SUBNETTING ]</span><span class="st">255.255.255.192</span></div>
+    <div class="eyebrow"><span>L3 · SUBNETTING</span><span class="st">255.255.255.192</span></div>
     <h2>The <span class="grad">numbers</span></h2>
     <div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
       <div class="stat rv" style="--d:0"><span class="n">2</span><span class="l">borrowed bits</span></div>
@@ -678,7 +682,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 6 · Subnet table -->
 <section class="slide" data-title="Subnet table">
   <div class="in">
-    <div class="eyebrow"><span>[ L3 · ROUTING TABLE VIEW ]</span></div>
+    <div class="eyebrow"><span>L3 · ROUTING TABLE VIEW</span></div>
     <h2>Subnet <span class="grad">table</span></h2>
     <div class="tbl-wrap">
       <table class="rt anim">
@@ -697,7 +701,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 7 · Addressing -->
 <section class="slide" data-title="Addressing">
   <div class="in">
-    <div class="eyebrow"><span>[ L3 · ADDRESSING ]</span><span class="st">mask 255.255.255.192</span></div>
+    <div class="eyebrow"><span>L3 · ADDRESSING</span><span class="st">mask 255.255.255.192</span></div>
     <h2>Gateway first, <span class="grad">hosts next</span></h2>
     <div class="tbl-wrap">
       <table class="rt anim">
@@ -724,7 +728,7 @@ table.rt tr.f td { color: var(--dim); }
       <pre><span class="ln" style="--i:0"><span class="p">Router&gt;</span>enable</span><span class="ln" style="--i:1"><span class="p">Router#</span>configure terminal</span><span class="ln" style="--i:2"><span class="p">Router(config)#</span>hostname R1</span><span class="ln" style="--i:3"><span class="p">R1(config)#</span>interface GigabitEthernet0/0</span><span class="ln" style="--i:4"><span class="p">R1(config-if)#</span>ip address 199.19.30.1 255.255.255.192</span><span class="ln" style="--i:5"><span class="p">R1(config-if)#</span><span class="g">no shutdown</span></span><span class="ln" style="--i:6"><span class="p">R1(config-if)#</span>exit</span><span class="ln" style="--i:7"><span class="p">R1(config)#</span>interface GigabitEthernet0/1</span><span class="ln" style="--i:8"><span class="p">R1(config-if)#</span>ip address 199.19.30.65 255.255.255.192</span><span class="ln" style="--i:9"><span class="p">R1(config-if)#</span><span class="g">no shutdown</span></span><span class="ln" style="--i:10"><span class="p">R1(config-if)#</span>end</span><span class="ln" style="--i:11"><span class="p">R1#</span></span></pre>
     </div>
     <div>
-      <div class="eyebrow"><span>[ L3 · IOS CLI ]</span></div>
+      <div class="eyebrow"><span>L3 · IOS CLI</span></div>
       <h2>Configuring <span class="grad">R1</span></h2>
       <ul class="pts">
         <li><strong>hostname R1</strong>. The prompt changes at once.</li>
@@ -738,7 +742,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 9 · show ip int brief -->
 <section class="slide" data-title="Interfaces up/up">
   <div class="in">
-    <div class="eyebrow"><span>[ L1 · L2 · STATUS ]</span><span class="st"><span class="led blink"></span>G0/0 up/up · G0/1 up/up</span></div>
+    <div class="eyebrow"><span>L1 · L2 · STATUS</span><span class="st"><span class="led blink"></span>G0/0 up/up · G0/1 up/up</span></div>
     <h2>Both interfaces <span class="grad">up/up</span></h2>
     <div class="term type">
       <div class="bar"><i></i><i></i><i></i><b>R1 · show ip interface brief</b></div>
@@ -755,7 +759,7 @@ table.rt tr.f td { color: var(--dim); }
 <section class="slide" data-title="Incident: 100% loss">
   <div class="in cols">
     <div class="incident">
-      <div class="eyebrow"><span>[ INCIDENT ]</span><span class="st"><span class="led down"></span>link to gateway: down</span></div>
+      <div class="eyebrow"><span>INCIDENT</span><span class="st"><span class="led down"></span>link to gateway: down</span></div>
       <h2>First ping: <span style="color:var(--red)">100% loss</span></h2>
       <ul class="pts">
         <li>PC A → PC2 failed: <strong>4 timeouts</strong>.</li>
@@ -774,7 +778,7 @@ table.rt tr.f td { color: var(--dim); }
 <section class="slide" data-title="Root cause: swapped uplinks">
   <div class="in cols">
     <div>
-      <div class="eyebrow"><span>[ L1 · ROOT CAUSE ]</span></div>
+      <div class="eyebrow"><span>L1 · ROOT CAUSE</span></div>
       <h2>The cables were <span class="grad">swapped</span></h2>
       <p class="big muted">Switch1 (Network A, gateway <code>.1</code>) was plugged into <strong>G0/1</strong> (<code>.65</code>). Switch2 was in G0/0. Each LAN's ARP for its gateway reached a port on the wrong subnet.</p>
       <p class="big"><span class="ok">Fix:</span> Switch1 → <strong>G0/0</strong>, Switch2 → <strong>G0/1</strong>.</p>
@@ -800,7 +804,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 12 · Ping success with TTL -->
 <section class="slide" data-title="Ping: TTL 127">
   <div class="in">
-    <div class="eyebrow"><span>[ L3 · ICMP ]</span><span class="st"><span class="led blink"></span>PC A → PC2 · after the fix</span></div>
+    <div class="eyebrow"><span>L3 · ICMP</span><span class="st"><span class="led blink"></span>PC A → PC2 · after the fix</span></div>
     <h2>Replies with <span class="grad">TTL=127</span></h2>
     <div class="lane ping" style="height:160px;margin-top:46px">
       <div class="nd" style="left:6%"><div class="dev">PC A</div><small>199.19.30.2</small></div>
@@ -825,7 +829,7 @@ table.rt tr.f td { color: var(--dim); }
 <section class="slide" data-title="Web server">
   <div class="in cols">
     <div>
-      <div class="eyebrow"><span>[ L7 · HTTP ]</span><span class="st"><span class="led"></span>HTTP on · HTTPS on</span></div>
+      <div class="eyebrow"><span>L7 · HTTP</span><span class="st"><span class="led"></span>HTTP on · HTTPS on</span></div>
       <h2>A web page <span class="grad">across the router</span></h2>
       <p class="big muted">PC B is on Network A and the server is on Network B. Loading the page tests every layer of the design together.</p>
     </div>
@@ -839,7 +843,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 14 · Screenshot -->
 <section class="slide" data-title="Packet Tracer">
   <div class="in">
-    <div class="eyebrow"><span>[ EVIDENCE ]</span><span class="st">Packet Tracer · logical view</span></div>
+    <div class="eyebrow"><span>EVIDENCE</span><span class="st">Packet Tracer · logical view</span></div>
     <figure class="win pop">
       <div class="bar"><i></i><i></i><i></i><b>Packet Tracer · Shoug_Alomran_Project1.pkt</b></div>
       <img src="../assets/01-topology.png" alt="Finished Packet Tracer topology with all link lights green">
@@ -851,7 +855,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 14b · Screenshot: browser -->
 <section class="slide" data-title="Browser from PC B">
   <div class="in">
-    <div class="eyebrow"><span>[ EVIDENCE ]</span><span class="st">PC B · Web Browser</span></div>
+    <div class="eyebrow"><span>EVIDENCE</span><span class="st">PC B · Web Browser</span></div>
     <figure class="win pop">
       <div class="bar"><i></i><i></i><i></i><b>PC B · Web Browser · http://199.19.30.68</b></div>
       <img src="../assets/14-browser-pc-b.png" alt="PC B web browser showing the custom server page">
@@ -863,7 +867,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 15 · Takeaways -->
 <section class="slide" data-title="Takeaways">
   <div class="in">
-    <div class="eyebrow"><span>[ TAKEAWAYS ]</span><span class="st"><span class="led"></span>all checks pass</span></div>
+    <div class="eyebrow"><span>TAKEAWAYS</span><span class="st"><span class="led"></span>all checks pass</span></div>
     <h2>What I <span class="grad">learned</span></h2>
     <div class="grid2">
       <div class="card rv" style="--d:0"><h3>Subnet first</h3><p class="muted">/26 gives 4 × 62 hosts. Block size 64 makes the boundaries easy to see.</p></div>
@@ -877,7 +881,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 16 · End -->
 <section class="slide" data-title="End">
   <div class="in" style="text-align:center">
-    <div class="eyebrow" style="justify-content:center"><span>[ EOF ]</span><span class="st"><span class="led blink"></span>R1#</span></div>
+    <div class="eyebrow" style="justify-content:center"><span>EOF</span><span class="st"><span class="led blink"></span>R1#</span></div>
     <h1>Thank <span class="grad">you</span></h1>
     <p class="lead" style="margin:20px auto">Questions?</p>
     <p class="mono dim">Shoug Fawaz Abdullah Alomran · CS331 · Ms. Nada ALALYANI</p>

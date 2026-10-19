@@ -7,7 +7,11 @@
 <meta name="description" content="Animated presentation: Wireshark packet capture and display filtering on macOS, CS331 Lab 01.">
 <meta name="author" content="Shoug Fawaz Abdullah Alomran">
 <meta name="theme-color" content="#050508">
+<link rel="icon" href="../../favicon.ico" sizes="48x48">
 <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<meta property="og:image" content="https://network.shoug-tech.com/og-banner.png">
+<meta name="twitter:card" content="summary_large_image">
 <script>
   /* Theme before first paint: saved choice, else dark */
   (function () {
@@ -22,7 +26,7 @@
 <style>
 /* ==========================================================================
    CS331 deck · self-contained (no build step, no frameworks)
-   Same design system as networks.shoug-tech.com (and the CS330 site):
+   Same design system as network.shoug-tech.com (and the CS330 site):
    #050508 ground, fine grid, cyan network accent, amber for replies and TTL.
    Shoug Alomran
    ========================================================================== */
@@ -578,7 +582,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 1 · Title -->
 <section class="slide" data-title="Title">
   <div class="in">
-    <div class="eyebrow"><span>[ LAB 01 ]</span><span>CS331</span><span class="st"><span class="led blink"></span>Status: Operational</span></div>
+    <div class="eyebrow"><span>LAB 01</span><span>CS331</span><span class="st"><span class="led blink"></span>Status: Operational</span></div>
     <h1>Wireshark Packet Capture<br>and <span class="grad">Display Filtering</span></h1>
     <p class="lead" style="margin-top:22px">Reading real packets off a MacBook's Wi-Fi interface, from the Ethernet header to the round-trip time.</p>
     <div class="lane hop short" aria-hidden="true" style="margin-top:28px">
@@ -599,7 +603,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 2 · Setup -->
 <section class="slide" data-title="Same lab, different OS">
   <div class="in">
-    <div class="eyebrow"><span>[ SETUP ]</span><span class="st">macOS · MacBook Air M2</span></div>
+    <div class="eyebrow"><span>SETUP</span><span class="st">macOS · MacBook Air M2</span></div>
     <h2>Same lab, <span class="grad">different OS</span></h2>
     <p class="lead">The lab sheet was written for Windows. I did it on macOS with the equivalent commands.</p>
     <div class="tbl-wrap">
@@ -619,7 +623,7 @@ table.rt tr.f td { color: var(--dim); }
 <section class="slide" data-title="Interface en0">
   <div class="in cols">
     <div>
-      <div class="eyebrow"><span>[ L2 · L3 ]</span><span class="st"><span class="led"></span>en0 active</span></div>
+      <div class="eyebrow"><span>L2 · L3</span><span class="st"><span class="led"></span>en0 active</span></div>
       <h2>Capturing on <span class="grad">en0</span></h2>
       <div class="stats" style="grid-template-columns:1fr">
         <div class="stat rv" style="--d:100"><span class="l">IPv4 · Layer 3</span><span class="n mono" style="font-size:clamp(1.4rem,3vw,2.2rem)">192.168.1.229</span></div>
@@ -636,7 +640,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 4 · Display filter concept -->
 <section class="slide" data-title="Capture all, display some">
   <div class="in">
-    <div class="eyebrow"><span>[ DISPLAY FILTERS ]</span></div>
+    <div class="eyebrow"><span>DISPLAY FILTERS</span></div>
     <h2>Capture everything. <span class="grad">Display what matters.</span></h2>
     <div class="wsk filtering" style="--chars:4">
       <div class="fbar"><span class="lbl">Apply a display filter …</span><span class="flt"><span class="tx">http</span></span></div>
@@ -657,7 +661,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 5 · Six filters -->
 <section class="slide" data-title="Six filters">
   <div class="in">
-    <div class="eyebrow"><span>[ L3 · L7 ]</span><span class="st">6 filters · 1 capture</span></div>
+    <div class="eyebrow"><span>L3 · L7</span><span class="st">6 filters · 1 capture</span></div>
     <h2>Six filters, <span class="grad">one capture</span></h2>
     <div class="grid3">
       <div class="card rv" style="--d:0"><code>http</code><p class="muted">Only HTTP: the request and the <strong>200 OK</strong>.</p></div>
@@ -673,7 +677,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 6 · Screenshot: http filter -->
 <section class="slide" data-title="http filter">
   <div class="in">
-    <div class="eyebrow"><span>[ L7 · HTTP ]</span><span class="st">filter: http</span></div>
+    <div class="eyebrow"><span>L7 · HTTP</span><span class="st">filter: http</span></div>
     <figure class="win pop">
       <div class="bar"><i></i><i></i><i></i><b>Wireshark · en0 · http</b></div>
       <img src="../assets/05-filter-http.png" alt="Wireshark with the http display filter applied">
@@ -686,7 +690,7 @@ table.rt tr.f td { color: var(--dim); }
 <section class="slide" data-title="HTTPS-only">
   <div class="in cols">
     <div>
-      <div class="eyebrow"><span>[ L4 · L7 ]</span><span class="st">www.psu.edu.sa</span></div>
+      <div class="eyebrow"><span>L4 · L7</span><span class="st">www.psu.edu.sa</span></div>
       <h2>PSU only speaks <span class="grad">HTTPS</span></h2>
       <p class="big muted">Port 80 does not answer, so <code>curl</code> timed out. HTTPS is encrypted, so the <code>http</code> filter has nothing to show.</p>
       <p class="big muted">For plain HTTP I used <strong>neverssl.com</strong>.</p>
@@ -705,7 +709,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 8 · DNS -->
 <section class="slide" data-title="DNS answers">
   <div class="in">
-    <div class="eyebrow"><span>[ L7 · DNS ]</span><span class="st">google.com.sa</span></div>
+    <div class="eyebrow"><span>L7 · DNS</span><span class="st">google.com.sa</span></div>
     <h2>One name, <span class="grad">two correct answers</span></h2>
     <div class="lane ask short" aria-label="Local resolver answered 172.217.17.35">
       <div class="nd" style="left:6%"><div class="dev">Mac</div><small>nslookup</small></div>
@@ -730,7 +734,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 9 · ICMP breakdown -->
 <section class="slide" data-title="ICMP: 10 packets">
   <div class="in">
-    <div class="eyebrow"><span>[ L3 · ICMP ]</span><span class="st">ping -c 4 google.com.sa → 172.217.17.35</span></div>
+    <div class="eyebrow"><span>L3 · ICMP</span><span class="st">ping -c 4 google.com.sa → 172.217.17.35</span></div>
     <h2><span class="grad">10</span> ICMP packets, not 8</h2>
     <div class="seg" role="img" aria-label="4 echo requests, 4 echo replies, 2 port unreachable">
       <div class="s-req" style="--w:4;--i:0">4 × echo request</div>
@@ -749,7 +753,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 10 · Screenshot: icmp filter -->
 <section class="slide" data-title="icmp filter">
   <div class="in">
-    <div class="eyebrow"><span>[ L3 · ICMP ]</span><span class="st">filter: icmp</span></div>
+    <div class="eyebrow"><span>L3 · ICMP</span><span class="st">filter: icmp</span></div>
     <figure class="win pop">
       <div class="bar"><i></i><i></i><i></i><b>Wireshark · en0 · icmp</b></div>
       <img src="../assets/14-filter-icmp.png" alt="Wireshark with the icmp display filter applied, 10 packets">
@@ -761,7 +765,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 11 · Hop-by-hop MAC -->
 <section class="slide" data-title="Hop-by-hop MAC">
   <div class="in">
-    <div class="eyebrow"><span>[ L2 vs L3 ]</span><span class="st">frame 228 · first echo request</span></div>
+    <div class="eyebrow"><span>L2 vs L3</span><span class="st">frame 228 · first echo request</span></div>
     <h2>MAC is <span class="grad">hop-by-hop</span>. IP is end-to-end.</h2>
     <div class="lane hop" style="height:170px;margin-top:40px">
       <div class="nd" style="left:6%"><div class="dev">Mac</div><small>a8:8f:d9:…</small></div>
@@ -781,7 +785,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 12 · Frame header -->
 <section class="slide" data-title="Ethernet header">
   <div class="in">
-    <div class="eyebrow"><span>[ L2 · ETHERNET II ]</span><span class="st">frame 228</span></div>
+    <div class="eyebrow"><span>L2 · ETHERNET II</span><span class="st">frame 228</span></div>
     <h2>Reading the <span class="grad">Ethernet header</span></h2>
     <div class="frame">
       <div class="dst" style="--i:0"><em>Destination · 6 B</em><b>24:5a:4c:81:24:16</b><span class="dim mono" style="font-size:12px">gateway · 192.168.1.1</span></div>
@@ -800,7 +804,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 13 · RTT -->
 <section class="slide" data-title="RTT">
   <div class="in">
-    <div class="eyebrow"><span>[ L3 · TIMING ]</span><span class="st">same echo, two clocks</span></div>
+    <div class="eyebrow"><span>L3 · TIMING</span><span class="st">same echo, two clocks</span></div>
     <h2>78.52 ms on the wire, <span class="grad">121.913 ms</span> in ping</h2>
     <div class="wsk" style="margin-bottom:18px">
       <div class="hd"><span>No.</span><span>Time</span><span>Source</span><span>Destination</span><span>Proto</span><span>Info</span></div>
@@ -818,7 +822,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 14 · Findings -->
 <section class="slide" data-title="Findings">
   <div class="in">
-    <div class="eyebrow"><span>[ FINDINGS ]</span><span class="st"><span class="led"></span>all objectives met</span></div>
+    <div class="eyebrow"><span>FINDINGS</span><span class="st"><span class="led"></span>all objectives met</span></div>
     <h2>What the capture <span class="grad">showed</span></h2>
     <div class="grid2">
       <div class="card rv" style="--d:0"><h3>HTTPS hides HTTP</h3><p class="muted">PSU: 53 SYNs to port 80, no reply. neverssl.com gave a readable <code>200 OK</code>.</p></div>
@@ -832,7 +836,7 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 15 · End -->
 <section class="slide" data-title="End">
   <div class="in" style="text-align:center">
-    <div class="eyebrow" style="justify-content:center"><span>[ EOF ]</span><span class="st"><span class="led blink"></span>Connection closed gracefully</span></div>
+    <div class="eyebrow" style="justify-content:center"><span>EOF</span><span class="st"><span class="led blink"></span>Connection closed gracefully</span></div>
     <h1>Thank <span class="grad">you</span></h1>
     <p class="lead" style="margin:20px auto">Questions?</p>
     <p class="mono dim">Shoug Fawaz Abdullah Alomran · CS331 · Ms. Nada ALALYANI</p>

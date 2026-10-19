@@ -378,3 +378,6 @@ body::after {
   .osi-ports .port.on i { animation: none; }
   .topo .pkt { display: none; }
 }
+
+/* Let the hero columns shrink below the console's intrinsic width on phones */
+.hero-grid > * { min-width: 0; }

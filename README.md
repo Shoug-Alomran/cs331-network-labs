@@ -7,14 +7,11 @@ Computer Networks** at Prince Sultan University, Term 261 (1st semester 2026–2
 - **Instructor:** Ms. Nada ALALYANI
 - **Live site:** <https://network.shoug-tech.com>
 
-| #   | Project                                                            | Type                   | Status      |
-| --- | ------------------------------------------------------------------ | ---------------------- | ----------- |
-| 01  | Lab 01: Wireshark Packet Capture and Display Filtering             | Individual · 3 marks   | Complete    |
-| 02  | Project 1: Switch and Router Network Design in Cisco Packet Tracer | Individual · 2.5 marks | Complete    |
-| 03  | Project 2: Web Server Configuration in Cisco Packet Tracer         | Group · 2.5 marks      | In progress |
-
-Each project has its own section of pages and its own full-screen presentation
-(`report/report.html`).
+| # | Project | Type | Status |
+|---|---|---|---|
+| 01 | Lab 01: Wireshark Packet Capture and Display Filtering | Individual · 3 marks | Complete |
+| 02 | Project 1: Switch and Router Network Design in Cisco Packet Tracer | Individual · 2.5 marks | Complete |
+| 03 | Project 2: Web Server Configuration in Cisco Packet Tracer | Group · 2.5 marks | In progress |
 
 ## Run locally
 
@@ -25,139 +22,87 @@ mkdocs serve            # http://127.0.0.1:8000
 
 `mkdocs build --strict` writes the static site to `site/`.
 
-The presentations are plain HTML files with no build step. Open
-`docs/<project>/report/report.html` directly in a browser, or go to `/<project>/report/report.html`
-while `mkdocs serve` is running.
+## Design
+
+The site uses the same custom MkDocs theme as the CS330 site
+(operating-systems.shoug-tech.com), with no Material. It has a cyan network accent, and amber
+for replies and TTL. Network-specific pieces:
+
+- **Home page** (`theme/home.html`): a router console that shows `show ip interface brief` and then
+  PC A pinging PC2 across R1, a **ping lab** where you can swap the router uplinks and watch the
+  ping fail, the real ICMP frames with live filters, and the wire-vs-`ping` RTT comparison.
+- **Page heroes**: front matter (`kicker`, `hero`, `lead`, `chips`, `actions`) plus `layers: [2, 3]`,
+  which lights up that page's OSI layers as a strip of port LEDs.
+- **Components** (`docs/assets/css/network.css`): link LEDs (`<span class="led"></span>`,
+  `.down`, `.wait`), the Wireshark-style packet list (`data-pkt`), topology diagrams
+  (`data-topo`), the subnet split, the Ethernet frame header, and the incident timeline.
+- **Cisco IOS terminals**: a fenced block with `{ .text .ios title="R1 · console" }`. Prompts
+  such as `R1#`, `R1(config-if)#` and `C:\>` are coloured automatically.
+- **Icons**: write `:icon-router:` (or `network`, `switch`, `server`, `activity`, …) in
+  Markdown. The list is in `hooks/icons.py`.
+- **Notes and warnings**: `/// note | Title` … `///` (block syntax, which survives format-on-save).
 
 ## Structure
 
 ```
-docs/
-  index.md                       landing page: course overview and project cards
-  stylesheets/extra.css          theme: mesh, OSI bands, IOS terminal, routing tables, cards
-  javascripts/network.js         mesh canvas, OSI stack strips, IOS prompt colouring
-  assets/favicon.svg
-  wireshark-lab/
-    index.md  setup.md  capture-and-filters.md  icmp-analysis.md  findings.md
-    report/report.html           presentation (15 slides)
-    assets/                      screenshots
-  project-1/
-    index.md  topology.md  subnetting.md  router-config.md  end-devices.md  verification.md
-    report/report.html           presentation (17 slides)
-    assets/                      screenshots + Shoug_Alomran_Project1.pkt
-  project-2/
-    index.md                     in progress, laid out from the brief
-    report/report.html           presentation shell, same design
-    assets/
 mkdocs.yml
-requirements.txt
-vercel.json                      Vercel build settings
-.github/workflows/deploy.yml     GitHub Pages deploy on push to main
+theme/                    main.html (header, page hero, footer), home.html, 404.html
+hooks/icons.py            :icon-name: → inline SVG
+docs/
+  index.md                uses theme/home.html
+  assets/css/             site.css (shared design system) + network.css
+  assets/js/              site.js (theme, nav, search, lightbox) + net.js (topology, ping lab, filters)
+  wireshark-lab/          index, setup, capture-and-filters, icmp-analysis, findings, report
+    report/report.html    presentation (15 slides)
+    assets/               screenshots
+  project-1/              index, topology, subnetting, router-config, end-devices, verification, report
+    report/report.html    presentation (17 slides)
+    assets/               screenshots + Shoug_Alomran_Project1.pkt
+  project-2/              index (plan and rubric from the brief), report
+    report/report.html    presentation shell (7 slides)
+  copyright.md, privacy-notice.md, academic-disclaimer.md   footer pages
 ```
 
-Only `docs/` is published. The source files in the repository root (assignment PDFs,
-the lab report, and the `.pcapng` captures) are not part of the site.
+Only `docs/` is published. The assignment PDFs, the lab report and the `.pcapng`
+captures in the repository root are not part of the site.
 
 ## Screenshots
 
-Every screenshot is a placeholder image that says `[ SCREENSHOT PENDING ]` and shows
-its file name. To use a real screenshot, save it over the placeholder **with the same
-file name**. No markdown or HTML changes are needed.
-
-| File                                                      | Used on                               |
-| --------------------------------------------------------- | ------------------------------------- |
-| `docs/wireshark-lab/assets/01-private-wifi-off.png`       | Setup                                 |
-| `docs/wireshark-lab/assets/02-ifconfig-en0.png`           | Setup                                 |
-| `docs/wireshark-lab/assets/03-wireshark-en0.png`          | Setup                                 |
-| `docs/wireshark-lab/assets/04-filter-http.png`            | Capture and Filters, presentation     |
-| `docs/wireshark-lab/assets/05-filter-ip-addr.png`         | Capture and Filters                   |
-| `docs/wireshark-lab/assets/06-filter-ip-src.png`          | Capture and Filters                   |
-| `docs/wireshark-lab/assets/07-filter-ip-dst.png`          | Capture and Filters                   |
-| `docs/wireshark-lab/assets/08-filter-ip-dst-and-http.png` | Capture and Filters                   |
-| `docs/wireshark-lab/assets/09-filter-dns-or-http.png`     | Capture and Filters                   |
-| `docs/wireshark-lab/assets/10-curl-psu-timeout.png`       | Capture and Filters                   |
-| `docs/wireshark-lab/assets/11-neverssl-head.png`          | Capture and Filters                   |
-| `docs/wireshark-lab/assets/12-nslookup.png`               | Capture and Filters                   |
-| `docs/wireshark-lab/assets/13-ping-terminal.png`          | ICMP Analysis                         |
-| `docs/wireshark-lab/assets/14-icmp-filter.png`            | ICMP Analysis, presentation           |
-| `docs/wireshark-lab/assets/15-frame-228.png`              | ICMP Analysis, presentation           |
-| `docs/wireshark-lab/assets/16-rtt-timestamps.png`         | ICMP Analysis                         |
-| `docs/project-1/assets/01-topology.png`                   | Topology, presentation                |
-| `docs/project-1/assets/02-r1-config.png`                  | Router Config                         |
-| `docs/project-1/assets/03-show-ip-int-brief.png`          | Router Config                         |
-| `docs/project-1/assets/04-pc-a-ip.png`                    | End Devices                           |
-| `docs/project-1/assets/05-pc-b-ip.png`                    | End Devices                           |
-| `docs/project-1/assets/06-pc1-pc2-ip.png`                 | End Devices                           |
-| `docs/project-1/assets/07-server-ip.png`                  | End Devices                           |
-| `docs/project-1/assets/08-http-service.png`               | End Devices                           |
-| `docs/project-1/assets/09-ping-failed.png`                | Verification (PC A → PC 2, 100% loss) |
-| `docs/project-1/assets/10-cabling-fix.png`                | Verification                          |
-| `docs/project-1/assets/11-ping-success.png`               | Verification (PC A → PC 2, TTL=127)   |
-| `docs/project-1/assets/12-browser-pc-b.png`               | Verification, presentation            |
-| `docs/project-2/assets/01-topology.png`                   | Project 2 overview                    |
-
-> Privacy: the site shows the Mac's MAC address as `a8:8f:d9:xx:xx:xx`. Crop or blur
-> the MAC in `02-ifconfig-en0.png` and `15-frame-228.png` before adding them.
+The screenshots were extracted from the submitted report PDFs. On the site the Mac's MAC
+address appears as `a8:8f:d9:xx:xx:xx`, so it is redacted in the images too: in
+`02-ifconfig-en0.png`, `17-frame-228.png` and `18-frame-230.png` (text, hex bytes and
+ASCII column). The Wireshark filter screenshots are cropped above the details pane.
+Each image's caption is its alt text.
 
 ## Presentations
 
-| Key                                           | Action              |
-| --------------------------------------------- | ------------------- |
-| <kbd>→</kbd> <kbd>Space</kbd> <kbd>PgDn</kbd> | Next slide          |
-| <kbd>←</kbd> <kbd>PgUp</kbd>                  | Previous slide      |
-| <kbd>Home</kbd> / <kbd>End</kbd>              | First / last slide  |
-| <kbd>F</kbd>                                  | Full screen         |
-| <kbd>T</kbd>                                  | Toggle light / dark |
+Each project has a `report/` page that embeds its deck, plus the full-screen deck
+itself at `report/report.html`. The decks are single self-contained HTML files.
 
-You can also click (the right side goes forward, the left quarter goes back), swipe on
-touch screens, or click a stop on the progress wire in the footer. The URL hash
-tracks the slide (`report.html#7`), so you can link straight to one.
+| Key | Action |
+|---|---|
+| <kbd>→</kbd> <kbd>Space</kbd> | Next slide |
+| <kbd>←</kbd> | Previous slide |
+| <kbd>Home</kbd> / <kbd>End</kbd> | First / last slide |
+| <kbd>F</kbd> | Full screen |
+| <kbd>T</kbd> | Light / dark (shared with the site) |
 
-Every slide has the footer **"Shoug Alomran · CS331"** and the slide number. Animations
-start when their slide becomes active. With _reduce motion_ turned on in the OS,
-they are replaced by their final state. Printing a deck (or saving it as PDF) gives
-one slide per landscape page.
-
-To edit a deck, open its `report.html` and change the `<section class="slide">`
-blocks. The CSS and JavaScript are inline at the top and bottom of the file.
-
-## Design
-
-- Dark by default (`#050508`). Light mode uses the palette toggle in the header (docs)
-  or the theme button (decks). Decks remember the choice in `localStorage`.
-- Network theme: a slowly drifting mesh of nodes and links drawn on a canvas. It
-  stays still under `prefers-reduced-motion`.
-- OSI layer bands: `<div class="osi-stack" data-on="2 3"></div>` at the top of a page,
-  and `<div class="osi-divider" data-layer="3" data-label="…"></div>` as a section divider.
-- Cisco IOS terminals: a fenced block with `{ .text .ios title="R1 · console" }`. Prompts
-  such as `R1#` and `C:\>` are coloured automatically, and a copy button is included.
-- Tables are styled as routing tables. Screenshots sit in `device-window` frames.
+You can also click (the left quarter goes back), swipe, or click a stop on the progress
+wire. Every slide's footer reads **Shoug Alomran · CS331** with the slide number. Under
+*reduce motion* the animations show their final state. Printing gives one slide per page.
 
 ## Adding Arabic
 
-The CSS uses logical properties (`margin-inline`, `inset-inline-start`, …) and has
-`[dir="rtl"]` rules, so it works in both directions. Terminals, code and addresses stay
-left-to-right. To add an Arabic (Saudi dialect) version:
-
-1. `pip install mkdocs-static-i18n` and add the `i18n` plugin to `mkdocs.yml` with
-   `en` (default) and `ar`.
-2. Put translations next to the English pages as `*.ar.md`, for example `docs/project-1/index.ar.md`.
-3. Uncomment `extra.alternate` in `mkdocs.yml` to get the language switcher.
-4. For a deck, copy `report.html` to `report.ar.html`, set `<html lang="ar" dir="rtl">`,
-   and translate the slide text. Arrow keys and swipe directions flip automatically.
+The decks use logical CSS properties and flip arrow keys and swipe direction under
+`dir="rtl"`. To add Arabic (Saudi dialect), add `mkdocs-static-i18n` with `*.ar.md`
+pages, and copy each deck to `report.ar.html` with `<html lang="ar" dir="rtl">`.
 
 ## Deploy
 
-**GitHub Pages:** push to `main`. `.github/workflows/deploy.yml` builds with
-`mkdocs build --strict` and publishes `site/`. In the repository settings, set Pages
-→ Source to _GitHub Actions_. `docs/CNAME` sets the custom domain to
-`network.shoug-tech.com`.
-
-**Vercel:** import the repository. `vercel.json` installs `requirements.txt`, runs
-`mkdocs build --strict`, and serves `site/`. Then add the domain in the Vercel project.
-
-For either one, point a `CNAME` record for `network` at the host
-(`<user>.github.io` or `cname.vercel-dns.com`).
+- **GitHub Pages:** push to `main`. `.github/workflows/deploy.yml` runs `mkdocs build --strict`
+  and publishes `site/`. Set Pages → Source to *GitHub Actions*. `docs/CNAME` sets
+  `network.shoug-tech.com`.
+- **Vercel:** `vercel.json` installs `requirements.txt`, builds, and serves `site/`.
 
 ---
 

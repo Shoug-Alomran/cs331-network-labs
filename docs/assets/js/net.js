@@ -63,8 +63,8 @@
     if (swapped) { up1.setAttribute("stroke-dasharray", "6 5"); up2.setAttribute("stroke-dasharray", "6 5"); }
     ["PCA", "PCB"].forEach(function (k) { el("line", { class: "wire", x1: 160, y1: 158, x2: NODES[k].x, y2: 220 }, g); });
     ["PC1", "PC2", "SRV"].forEach(function (k) { el("line", { class: "wire", x1: 480, y1: 158, x2: NODES[k].x, y2: 220 }, g); });
-    el("text", { class: "sub", x: 286, y: 82, "text-anchor": "end" }, g).textContent = "G0/0 · .1";
-    el("text", { class: "sub", x: 354, y: 82 }, g).textContent = "G0/1 · .65";
+    el("text", { class: "sub", x: 246, y: 72, "text-anchor": "end" }, g).textContent = "G0/0 · .1";
+    el("text", { class: "sub", x: 394, y: 72 }, g).textContent = "G0/1 · .65";
     var nodes = {};
     Object.keys(NODES).forEach(function (k) {
       var n = NODES[k], h = 36;
@@ -133,7 +133,7 @@
   /* ---------- 3. Hero console ---------------------------------------------- */
   var hero = $("[data-net-hero]");
   if (hero) {
-    var hsvg = $("svg", hero), term = $(".term", hero), tag = $("[data-term-phase]", hero), file = $("[data-term-file]", hero);
+    var hsvg = $(".topo svg", hero), term = $(".term", hero), tag = $("[data-term-phase]", hero), file = $("[data-term-file]", hero);
     var topo = drawTopo(hsvg, { src: "PCA", dst: "PC2" });
     var ports = {};
     $$("[data-port]", hero).forEach(function (p) { ports[p.getAttribute("data-port")] = p; });
@@ -219,7 +219,7 @@
   /* ---------- 4. Ping lab ---------------------------------------------------- */
   var lab = $("[data-ping-lab]");
   if (lab) {
-    var lsvg = $("svg", lab), lout = $(".term-out", lab), note = $(".lab-note", lab);
+    var lsvg = $(".topo svg", lab), lout = $(".term-out", lab), note = $(".lab-note", lab);
     var state = { src: "PCA", dst: "PC2", cab: "ok" };
     var busy = 0;
     var LABEL = { PCA: "PC A", PCB: "PC B", PC2: "PC2", SRV: "Server 1", GW: "its gateway" };
