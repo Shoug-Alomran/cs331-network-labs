@@ -50,54 +50,11 @@ actions:
 
 ## The build, step by step
 
-<div class="grid g-3" markdown>
-
-<a class="card card-link" href="topology/" markdown>
-<div class="card-icon">:icon-network:</div>
-
-### Topology
-Cabling, and which router port faces which LAN.
-<span class="go">Open :icon-arrow-right:</span>
-</a>
-
-<a class="card card-link" href="subnetting/" markdown>
-<div class="card-icon">:icon-grid:</div>
-
-### Subnetting
-Borrow 2 bits: four /26 subnets of 62 hosts.
-<span class="go">Open :icon-arrow-right:</span>
-</a>
-
-<a class="card card-link" href="router-config/" markdown>
-<div class="card-icon">:icon-terminal:</div>
-
-### Router config
-IOS commands on R1, then `show ip interface brief`.
-<span class="go">Open :icon-arrow-right:</span>
-</a>
-
-<a class="card card-link" href="end-devices/" markdown>
-<div class="card-icon">:icon-monitor:</div>
-
-### End devices
-Static IPs, gateways, and the custom web page.
-<span class="go">Open :icon-arrow-right:</span>
-</a>
-
-<a class="card card-link" href="verification/" markdown>
-<div class="card-icon">:icon-check:</div>
-
-### Verification
-The 100% loss incident, the fix, and the TTL=127 replies.
-<span class="go">Open :icon-arrow-right:</span>
-</a>
-
-<a class="card card-link" href="assets/Shoug_Alomran_Project1.pkt" download markdown>
-<div class="card-icon hot">:icon-download:</div>
-
-### Packet Tracer file
-`Shoug_Alomran_Project1.pkt`, the submitted network.
-<span class="go">Download :icon-arrow-right:</span>
-</a>
-
+<div class="grid g-3">
+  <a class="card card-link" href="topology/"><div class="card-icon">:icon-network:</div><h3>Topology</h3><p>Cabling, and which router port faces which LAN.</p><span class="go">Open :icon-arrow-right:</span></a>
+  <a class="card card-link" href="subnetting/"><div class="card-icon">:icon-grid:</div><h3>Subnetting</h3><p>Borrow 2 bits: four /26 subnets of 62 hosts.</p><span class="go">Open :icon-arrow-right:</span></a>
+  <a class="card card-link" href="router-config/"><div class="card-icon">:icon-terminal:</div><h3>Router config</h3><p>IOS commands on R1, then <code>show ip interface brief</code>.</p><span class="go">Open :icon-arrow-right:</span></a>
+  <a class="card card-link" href="end-devices/"><div class="card-icon">:icon-monitor:</div><h3>End devices</h3><p>Static IPs, gateways, and the custom web page.</p><span class="go">Open :icon-arrow-right:</span></a>
+  <a class="card card-link" href="verification/"><div class="card-icon">:icon-check:</div><h3>Verification</h3><p>The 100% loss incident, the fix, and the TTL=127 replies.</p><span class="go">Open :icon-arrow-right:</span></a>
+  <a class="card card-link" href="assets/Shoug_Alomran_Project1.pkt" download><div class="card-icon hot">:icon-download:</div><h3>Packet Tracer file</h3><p><code>Shoug_Alomran_Project1.pkt</code>, the submitted network.</p><span class="go">Download :icon-arrow-right:</span></a>
 </div>

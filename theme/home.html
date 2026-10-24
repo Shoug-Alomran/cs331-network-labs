@@ -156,17 +156,18 @@
         <span class="card-index">project / <b>02</b></span>
         <div class="card-icon">{{ i.icon("server") }}</div>
         <h3>Web Server Configuration</h3>
-        <p class="tagline">Group project. A Packet Tracer server with HTTP and HTTPS on and a page for the group, opened from a client's browser by IP.</p>
-        <div class="layers"><span><b>L3</b> Addressing</span><span><b>L7</b> HTTP · HTTPS</span></div>
+        <p class="tagline">With Aljawhara Alruzuq. A Packet Tracer server with HTTP and HTTPS on, the sample site replaced by a group page, opened from PC0's browser by IP.</p>
+        <div class="layers"><span><b>L2</b> Switching</span><span><b>L3</b> Addressing</span><span><b>L7</b> HTTP · HTTPS</span></div>
         <dl class="kv">
-          <div><dt>Type</dt><dd>Group</dd></div>
-          <div><dt>Marks</dt><dd>2.5</dd></div>
-          <div><dt>Status</dt><dd style="color:var(--link-wait)">WIP</dd></div>
+          <div><dt>Network</dt><dd>/24</dd></div>
+          <div><dt>Files left</dt><dd>1</dd></div>
+          <div><dt>DNS</dt><dd class="good">None</dd></div>
         </dl>
-        <div class="verdict" style="--c: var(--link-wait)">In progress. No DNS server: the page is reached by IP address.</div>
+        <div class="verdict" style="--c: var(--accent)"><code>http://192.168.1.10</code> loaded the group page. No router, no DNS.</div>
         <div class="links">
           <a class="btn btn-sm" href="{{ 'project-2/' | url }}">{{ i.icon("arrow-right") }}Overview</a>
           <a class="btn btn-sm" href="{{ 'project-2/report/' | url }}">{{ i.icon("slides") }}Presentation</a>
+          <a class="btn btn-sm" href="{{ 'project-2/assets/cs331-project-2-web-server-configuration.pkt' | url }}" download>{{ i.icon("download") }}.pkt</a>
         </div>
       </article>
     </div>

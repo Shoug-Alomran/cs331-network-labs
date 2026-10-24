@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Project 2 · Web Server Configuration · Shoug Alomran</title>
-<meta name="description" content="Presentation shell for CS331 Project 2: web server configuration in Cisco Packet Tracer (in progress).">
+<title>Project 2 · Web Server Configuration · Shoug Alomran &amp; Aljawhara Alruzuq</title>
+<meta name="description" content="Animated presentation: a web server with HTTP and HTTPS in Cisco Packet Tracer, reached by IP address, CS331 Project 2.">
 <meta name="author" content="Shoug Fawaz Abdullah Alomran">
 <meta name="theme-color" content="#050508">
 <link rel="icon" href="../../favicon.ico" sizes="48x48">
@@ -579,38 +579,29 @@ table.rt tr.f td { color: var(--dim); }
 </header>
 
 <main class="deck" id="deck" aria-live="polite">
-<!-- Project 2 shell: same design as the other decks. Replace each .pending
-     block with real content as the group finishes each part. -->
-
 <!-- 1 · Title -->
 <section class="slide" data-title="Title">
   <div class="in">
-    <div class="eyebrow"><span>PROJECT 2</span><span>CS331</span><span class="st"><span class="led wait blink"></span>Status: In progress</span></div>
+    <div class="eyebrow"><span>Project 2 · CS331</span><span class="st"><span class="led blink"></span>Status: Complete</span></div>
     <h1>Web Server Configuration<br>in <span class="grad">Cisco Packet Tracer</span></h1>
-    <p class="lead" style="margin-top:22px">Group project · 2.5 marks</p>
+    <p class="lead" style="margin-top:22px">A page for the group, served by a Packet Tracer web server and opened from a PC's browser by IP address.</p>
     <div class="stats">
-      <div class="stat"><span class="l">Team</span><span class="mono" style="display:block;margin-top:6px">Shoug Alomran · …</span></div>
-      <div class="stat"><span class="l">Instructor</span><span class="mono" style="display:block;margin-top:6px">Ms. Nada ALALYANI</span></div>
-      <div class="stat"><span class="l">Term</span><span class="mono" style="display:block;margin-top:6px">261 · 2026–2027 · PSU</span></div>
+      <div class="stat"><span class="l">Team</span><span class="mono" style="display:block;margin-top:8px">Shoug Alomran · Aljawhara Alruzuq</span></div>
+      <div class="stat"><span class="l">Instructor</span><span class="mono" style="display:block;margin-top:8px">Ms. Nada ALALYANI</span></div>
+      <div class="stat"><span class="l">Term</span><span class="mono" style="display:block;margin-top:8px">261 · 2026–2027 · PSU</span></div>
     </div>
   </div>
 </section>
 
-<!-- 2 · Agenda -->
-<section class="slide" data-title="Agenda">
+<!-- 2 · Scope -->
+<section class="slide" data-title="The brief">
   <div class="in">
-    <div class="eyebrow"><span>AGENDA</span></div>
-    <h2>What this deck <span class="grad">will cover</span></h2>
-    <div class="tbl-wrap">
-      <table class="rt anim">
-        <thead><tr><th>#</th><th>Section</th><th>Layer</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr style="--i:0"><td class="m">01</td><td>Static IP on server and client</td><td class="m">L3</td><td><span class="led wait"></span> pending</td></tr>
-          <tr style="--i:1"><td class="m">02</td><td>HTTP and HTTPS on, default files removed</td><td class="m">L7</td><td><span class="led wait"></span> pending</td></tr>
-          <tr style="--i:2"><td class="m">03</td><td>index.html with group names and IDs</td><td class="m">L7</td><td><span class="led wait"></span> pending</td></tr>
-          <tr style="--i:3"><td class="m">04</td><td>Browser test by server IP (no DNS)</td><td class="m">L3 · L7</td><td><span class="led wait"></span> pending</td></tr>
-        </tbody>
-      </table>
+    <div class="eyebrow"><span>L3 · L7 · Scope</span><span class="st">group · 2.5 marks</span></div>
+    <h2>Two things to configure, <span class="grad">one to leave out.</span></h2>
+    <div class="grid3">
+      <div class="card rv" style="--d:0"><span class="led"></span> <strong class="mono">Host IPs</strong><p>Static address and mask on the server and the client.</p></div>
+      <div class="card rv" style="--d:150"><span class="led"></span> <strong class="mono">Web server</strong><p>HTTP and HTTPS on, defaults deleted, a page for the group.</p></div>
+      <div class="card rv" style="--d:300"><span class="led down"></span> <strong class="mono">No DNS</strong><p>The page is reached by typing the server's IP address.</p></div>
     </div>
   </div>
 </section>
@@ -618,46 +609,127 @@ table.rt tr.f td { color: var(--dim); }
 <!-- 3 · Topology -->
 <section class="slide" data-title="Topology">
   <div class="in">
-    <div class="eyebrow"><span>L1 · L2 · TOPOLOGY</span><span class="st"><span class="led wait"></span>pending</span></div>
-    <h2><span class="grad">Topology</span></h2>
-    <div class="pending"><div><b>[ PENDING ]</b>Topology screenshot · server and client</div></div>
+    <div class="eyebrow"><span>L1 · L2 · Topology</span><span class="st"><span class="led blink"></span>192.168.1.0/24</span></div>
+    <h2>One switch, <span class="grad">no router.</span></h2>
+    <div class="lane ping" style="height:160px;margin-top:46px">
+      <div class="nd" style="left:6%"><div class="dev">PC0</div><small>192.168.1.20</small></div>
+      <div class="nd" style="left:50%"><div class="dev">2960</div><small>switch</small></div>
+      <div class="nd router" style="left:94%"><div class="dev">Server0</div><small>192.168.1.10</small></div>
+      <div class="pk"><span class="dot"></span><span class="lab"><span class="k1">GET / · port 80</span><span class="k2">200 OK · index.html</span></span></div>
+    </div>
+    <ul class="pts">
+      <li>Both devices are in <strong>192.168.1.0/24</strong>, so the switch delivers frames directly. No default gateway is needed.</li>
+      <li>Copper straight-through cables from each device to the Cisco 2960.</li>
+    </ul>
   </div>
 </section>
 
 <!-- 4 · Addressing -->
 <section class="slide" data-title="Addressing">
   <div class="in">
-    <div class="eyebrow"><span>L3 · ADDRESSING</span><span class="st"><span class="led wait"></span>pending</span></div>
-    <h2><span class="grad">Addressing</span></h2>
-    <div class="pending"><div><b>[ PENDING ]</b>Static IP and subnet mask · server and client</div></div>
+    <div class="eyebrow"><span>L3 · Addressing</span><span class="st">Desktop → IP Configuration → Static</span></div>
+    <h2>Two static <span class="grad">addresses.</span></h2>
+    <div class="tbl-wrap">
+      <table class="rt anim">
+        <thead><tr><th>Device</th><th>Interface</th><th>IP address</th><th>Mask</th><th>Gateway</th></tr></thead>
+        <tbody>
+          <tr class="b" style="--i:0"><td><strong>Server0</strong></td><td class="m">FastEthernet0</td><td class="m">192.168.1.10</td><td class="m">255.255.255.0</td><td class="m">N/A</td></tr>
+          <tr class="a" style="--i:1"><td><strong>PC0</strong></td><td class="m">FastEthernet0</td><td class="m">192.168.1.20</td><td class="m">255.255.255.0</td><td class="m">N/A</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid2" style="margin-top:18px">
+      <figure class="win pop"><div class="bar"><i></i><i></i><i></i><b>Server0 · IP Configuration</b></div><img src="../assets/01-server-ip.png" alt="Server0 static IP 192.168.1.10" style="max-height:30vh"></figure>
+      <figure class="win pop"><div class="bar"><i></i><i></i><i></i><b>PC0 · IP Configuration</b></div><img src="../assets/02-pc-ip.png" alt="PC0 static IP 192.168.1.20" style="max-height:30vh"></figure>
+    </div>
   </div>
 </section>
 
-<!-- 5 · Server -->
-<section class="slide" data-title="Server configuration">
+<!-- 5 · HTTP + HTTPS -->
+<section class="slide" data-title="HTTP and HTTPS">
+  <div class="in cols">
+    <div>
+      <div class="eyebrow"><span>L7 · Services</span><span class="st">Server0 → Services → HTTP</span></div>
+      <h2>Both services <span class="grad">on.</span></h2>
+      <div style="display:grid;gap:14px">
+        <div class="port open rv" style="--d:100"><span class="led"></span><span class="num mono">:80</span><div><strong>HTTP</strong><small>On · plain web traffic</small></div></div>
+        <div class="port open rv" style="--d:300"><span class="led"></span><span class="num mono">:443</span><div><strong>HTTPS</strong><small>On · TLS</small></div></div>
+      </div>
+    </div>
+    <figure class="win pop"><div class="bar"><i></i><i></i><i></i><b>Server0 · Services · HTTP</b></div><img src="../assets/03-http-https-on.png" alt="HTTP and HTTPS switched On"></figure>
+  </div>
+</section>
+
+<!-- 6 · Delete defaults -->
+<section class="slide" data-title="Default files">
   <div class="in">
-    <div class="eyebrow"><span>L7 · SERVICES</span><span class="st"><span class="led wait"></span>pending</span></div>
-    <h2>Server <span class="grad">configuration</span></h2>
-    <div class="pending"><div><b>[ PENDING ]</b>Services → HTTP · HTTP and HTTPS on · only index.html kept</div></div>
+    <div class="eyebrow"><span>L7 · File Manager</span><span class="st">4 deleted · 1 kept</span></div>
+    <h2>Delete the sample site, <span class="grad">keep index.html.</span></h2>
+    <div class="wsk filtering" style="--chars:10">
+      <div class="fbar"><span class="lbl">File Manager · keep</span><span class="flt"><span class="tx">index.html</span></span></div>
+      <div class="hd"><span>#</span><span>Type</span><span>File name</span><span>Edit</span><span>Del</span><span>Result</span></div>
+      <div class="row" style="--i:0"><span>1</span><span>html</span><span>copyrights.html</span><span>(edit)</span><span>✕</span><span>deleted</span></div>
+      <div class="row" style="--i:1"><span>2</span><span>jpg</span><span>cscoplogo177x111.jpg</span><span>—</span><span>✕</span><span>deleted</span></div>
+      <div class="row" style="--i:2"><span>3</span><span>html</span><span>helloworld.html</span><span>(edit)</span><span>✕</span><span>deleted</span></div>
+      <div class="row" style="--i:3"><span>4</span><span>html</span><span>image.html</span><span>(edit)</span><span>✕</span><span>deleted</span></div>
+      <div class="row http m" style="--i:4"><span>5</span><span>html</span><span>index.html</span><span>(edit)</span><span>—</span><span>kept and edited</span></div>
+    </div>
   </div>
 </section>
 
-<!-- 6 · Verification -->
+<!-- 7 · index.html -->
+<section class="slide" data-title="index.html">
+  <div class="in cols w60">
+    <div class="term type">
+      <div class="bar"><i></i><i></i><i></i><b>Server0 · index.html</b></div>
+      <pre><span class="ln" style="--i:0"><span class="c">&lt;html&gt;</span></span><span class="ln" style="--i:1"><span class="c">&lt;body&gt;</span></span><span class="ln" style="--i:2"><span class="p">&lt;h1&gt;</span>Welcome to our CS331 Project<span class="p">&lt;/h1&gt;</span></span><span class="ln" style="--i:3"><span class="p">&lt;p&gt;</span>Shoug Alomran - 223410392<span class="p">&lt;br&gt;</span></span><span class="ln" style="--i:4">Aljawhara Alruzuq - 223410216<span class="p">&lt;/p&gt;</span></span><span class="ln" style="--i:5"><span class="c">&lt;/body&gt;</span></span><span class="ln" style="--i:6"><span class="c">&lt;/html&gt;</span></span></pre>
+    </div>
+    <div>
+      <div class="eyebrow"><span>L7 · HTML</span><span class="st">(edit) → Save</span></div>
+      <h2>The brief's template, <span class="grad">filled in.</span></h2>
+      <ul class="pts">
+        <li>The heading from the brief: <strong>Welcome to our CS331 Project</strong>.</li>
+        <li>Both group members' <strong>names and student IDs</strong>, one per line with <code>&lt;br&gt;</code>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · Verification -->
 <section class="slide" data-title="Verification">
-  <div class="in">
-    <div class="eyebrow"><span>L3 · L7 · VERIFY</span><span class="st"><span class="led wait"></span>pending</span></div>
-    <h2><span class="grad">Verification</span></h2>
-    <div class="pending"><div><b>[ PENDING ]</b>Web Browser → http://&lt;server IP&gt; · group page shown</div></div>
+  <div class="in cols">
+    <div>
+      <div class="eyebrow"><span>L3 · L7 · Verify</span><span class="st"><span class="led blink"></span>PC0 → Web Browser</span></div>
+      <h2>Type the IP, <span class="grad">get the page.</span></h2>
+      <p class="big muted">On PC0: <strong>Desktop → Web Browser</strong>, URL <code>http://192.168.1.10</code>, <strong>Go</strong>. No name to resolve, so no DNS server is involved.</p>
+    </div>
+    <div class="browser rv" style="--d:200">
+      <div class="url"><span>http://192.168.1.10</span></div>
+      <div class="page"><h4>Welcome to our CS331 Project</h4><p>Shoug Alomran - 223410392<br>Aljawhara Alruzuq - 223410216</p></div>
+    </div>
   </div>
 </section>
 
-<!-- 7 · End -->
+<!-- 9 · Evidence -->
+<section class="slide" data-title="Evidence">
+  <div class="in">
+    <div class="eyebrow"><span>Evidence</span><span class="st">PC0 · Web Browser</span></div>
+    <figure class="win pop">
+      <div class="bar"><i></i><i></i><i></i><b>PC0 · Web Browser · http://192.168.1.10</b></div>
+      <img src="../assets/07-browser-result.png" alt="PC0 browser showing the group page from Server0">
+      <figcaption>The page from Server0, loaded by IP address on PC0.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 10 · End -->
 <section class="slide" data-title="End">
   <div class="in" style="text-align:center">
-    <div class="eyebrow" style="justify-content:center"><span>EOF</span><span class="st"><span class="led wait blink"></span>to be continued</span></div>
+    <div class="eyebrow" style="justify-content:center"><span>EOF</span><span class="st"><span class="led blink"></span>HTTP/1.1 200 OK</span></div>
     <h1>Thank <span class="grad">you</span></h1>
-    <p class="mono dim" style="margin-top:20px">Shoug Alomran · CS331 · Ms. Nada ALALYANI</p>
-    <p class="mono" style="margin-top:22px"><a href="../">Back to the docs &rarr;</a></p>
+    <p class="lead" style="margin:20px auto">Questions?</p>
+    <p class="mono dim">Shoug Alomran · Aljawhara Alruzuq · CS331 · Ms. Nada ALALYANI</p>
+    <p class="mono" style="margin-top:22px"><a href="../" target="_top">Read the full write-up &rarr;</a> · <a href="../assets/cs331-project-2-web-server-configuration.pkt" download>Download .pkt</a></p>
   </div>
 </section>
 </main>

@@ -11,7 +11,7 @@ Computer Networks** at Prince Sultan University, Term 261 (1st semester 2026–2
 |---|---|---|---|
 | 01 | Lab 01: Wireshark Packet Capture and Display Filtering | Individual · 3 marks | Complete |
 | 02 | Project 1: Switch and Router Network Design in Cisco Packet Tracer | Individual · 2.5 marks | Complete |
-| 03 | Project 2: Web Server Configuration in Cisco Packet Tracer | Group · 2.5 marks | In progress |
+| 03 | Project 2: Web Server Configuration in Cisco Packet Tracer (with Aljawhara Alruzuq) | Group · 2.5 marks | Complete |
 
 ## Run locally
 
@@ -58,8 +58,9 @@ docs/
   project-1/              index, topology, subnetting, router-config, end-devices, verification, report
     report/report.html    presentation (17 slides)
     assets/               screenshots + Shoug_Alomran_Project1.pkt
-  project-2/              index (plan and rubric from the brief), report
-    report/report.html    presentation shell (7 slides)
+  project-2/              index, ip-configuration, http-server, verification, report
+    report/report.html    presentation (10 slides)
+    assets/               screenshots, cs331-project-2-web-server-configuration.pkt, cs331-project-2-web-server-configuration-report.pdf
   copyright.md, privacy-notice.md, academic-disclaimer.md   footer pages
 ```
 

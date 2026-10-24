@@ -42,40 +42,11 @@ actions:
 
 ## What's inside
 
-<div class="grid g-2" markdown>
-
-<a class="card card-link" href="setup/" markdown>
-<div class="card-icon">:icon-laptop:</div>
-
-### Setup
-The macOS stand-ins for `ipconfig /all` and `ping -4`, and turning off Private Wi-Fi Address to see the real MAC.
-<span class="go">Open :icon-arrow-right:</span>
-</a>
-
-<a class="card card-link" href="capture-and-filters/" markdown>
-<div class="card-icon">:icon-filter:</div>
-
-### Capture & filters
-The six display filters, why the PSU site never showed up as HTTP, and two correct DNS answers for one name.
-<span class="go">Open :icon-arrow-right:</span>
-</a>
-
-<a class="card card-link" href="icmp-analysis/" markdown>
-<div class="card-icon">:icon-activity:</div>
-
-### ICMP analysis
-Ten ICMP frames, frame 228's Ethernet and IP headers, and why the wire RTT is lower than `ping`'s.
-<span class="go">Open :icon-arrow-right:</span>
-</a>
-
-<a class="card card-link" href="findings/" markdown>
-<div class="card-icon">:icon-check:</div>
-
-### Findings
-Six things the capture showed, each in a couple of sentences.
-<span class="go">Open :icon-arrow-right:</span>
-</a>
-
+<div class="grid g-2">
+  <a class="card card-link" href="setup/"><div class="card-icon">:icon-laptop:</div><h3>Setup</h3><p>The macOS stand-ins for <code>ipconfig /all</code> and <code>ping -4</code>, and turning off Private Wi-Fi Address to see the real MAC.</p><span class="go">Open :icon-arrow-right:</span></a>
+  <a class="card card-link" href="capture-and-filters/"><div class="card-icon">:icon-filter:</div><h3>Capture & filters</h3><p>The six display filters, why the PSU site never showed up as HTTP, and two correct DNS answers for one name.</p><span class="go">Open :icon-arrow-right:</span></a>
+  <a class="card card-link" href="icmp-analysis/"><div class="card-icon">:icon-activity:</div><h3>ICMP analysis</h3><p>Ten ICMP frames, frame 228's Ethernet and IP headers, and why the wire RTT is lower than <code>ping</code>'s.</p><span class="go">Open :icon-arrow-right:</span></a>
+  <a class="card card-link" href="findings/"><div class="card-icon">:icon-check:</div><h3>Findings</h3><p>Six things the capture showed, each in a couple of sentences.</p><span class="go">Open :icon-arrow-right:</span></a>
 </div>
 
 /// info | macOS substitutions

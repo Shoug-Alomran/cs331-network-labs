@@ -36,6 +36,9 @@ nav:
       - Presentation: project-1/report.md
   - Project 2:
       - Overview: project-2/index.md
+      - IP Configuration: project-2/ip-configuration.md
+      - HTTP Server: project-2/http-server.md
+      - Verification: project-2/verification.md
       - Presentation: project-2/report.md
 
 markdown_extensions:
