@@ -4,7 +4,7 @@ Documentation site and animated presentations for **CS331 Data Communications an
 Computer Networks** at Prince Sultan University, Term 261 (1st semester 2026–2027).
 
 - **Author:** Shoug Fawaz Abdullah Alomran
-- **Instructor:** Ms. Nada ALALYANI
+- **Instructor:** Ms. Nada Alalyani
 - **Live site:** <https://network.shoug-tech.com>
 
 | # | Project | Type | Status |
