@@ -16,11 +16,11 @@ chips:
 
 ## Windows to macOS
 
-| Lab sheet (Windows) | Used on macOS | Purpose |
-|---|---|---|
-| `ipconfig /all` | `ifconfig en0` | Show the MAC (`ether`) and IPv4 (`inet`) of the Wi-Fi interface |
-| `ping -4 Google.com.sa` | `ping -c 4 google.com.sa` | macOS `ping` is IPv4 already. `-c 4` stops after four echoes, like Windows |
-| `nslookup Google.com.sa 8.8.8.8` | `nslookup google.com.sa 8.8.8.8` | Same on both |
+| Lab sheet (Windows)              | Used on macOS                    | Purpose                                                                    |
+| -------------------------------- | -------------------------------- | -------------------------------------------------------------------------- |
+| `ipconfig /all`                  | `ifconfig en0`                   | Show the MAC (`ether`) and IPv4 (`inet`) of the Wi-Fi interface            |
+| `ping -4 Google.com.sa`          | `ping -c 4 google.com.sa`        | macOS `ping` is IPv4 already. `-c 4` stops after four echoes, like Windows |
+| `nslookup Google.com.sa 8.8.8.8` | `nslookup google.com.sa 8.8.8.8` | Same on both                                                               |
 
 ## Expose the hardware MAC
 
@@ -34,7 +34,7 @@ macOS gives each Wi-Fi network its own random MAC address by default. With that 
 
 ## Read the interface
 
-``` { .text .ios title="zsh · ifconfig en0" }
+```{ .text .ios title="zsh · ifconfig en0" }
 % ifconfig en0
 en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
 	ether a8:8f:d9:xx:xx:xx

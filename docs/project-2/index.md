@@ -24,6 +24,9 @@ actions:
   - label: Report (PDF)
     href: assets/cs331-project-2-web-server-configuration-report.pdf
     icon: pdf
+  - label: Assignment brief
+    href: assets/cs331-project-2-web-server-configuration-brief.pdf
+    icon: clipboard
 ---
 
 ## At a glance
@@ -37,9 +40,9 @@ actions:
 
 ## Team
 
-| Member | Role |
-|---|---|
-| Shoug Fawaz Abdullah Alomran | Group member |
+| Member                           | Role         |
+| -------------------------------- | ------------ |
+| Shoug Fawaz Abdullah Alomran     | Group member |
 | Aljawhara Mohmmad Nasser Alruzuq | Group member |
 
 ## Topology
@@ -76,11 +79,11 @@ Server0 and PC0 are both on one Cisco 2960 switch, joined with copper straight-t
 
 ## Rubric
 
-| Criterion | Marks | Where |
-|---|---:|---|
-| IP setup and addressing on server and client | 0.5 | [IP configuration](ip-configuration.md) |
-| HTTP service on, default files cleaned up | 0.5 | [HTTP server](http-server.md) |
-| `index.html` shows all group details | 0.5 | [HTTP server](http-server.md#customising-indexhtml) |
-| Page loads in the host's web browser by server IP | 0.5 | [Verification](verification.md) |
-| Valid `.pkt` file and verification screenshots | 0.5 | [Download the .pkt](assets/cs331-project-2-web-server-configuration.pkt) |
-| **Total** | **2.5** | |
+| Criterion                                         |   Marks | Where                                                                    |
+| ------------------------------------------------- | ------: | ------------------------------------------------------------------------ |
+| IP setup and addressing on server and client      |     0.5 | [IP configuration](ip-configuration.md)                                  |
+| HTTP service on, default files cleaned up         |     0.5 | [HTTP server](http-server.md)                                            |
+| `index.html` shows all group details              |     0.5 | [HTTP server](http-server.md#customising-indexhtml)                      |
+| Page loads in the host's web browser by server IP |     0.5 | [Verification](verification.md)                                          |
+| Valid `.pkt` file and verification screenshots    |     0.5 | [Download the .pkt](assets/cs331-project-2-web-server-configuration.pkt) |
+| **Total**                                         | **2.5** |                                                                          |

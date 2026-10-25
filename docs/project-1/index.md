@@ -20,6 +20,12 @@ actions:
   - label: Download the .pkt
     href: assets/Shoug_Alomran_Project1.pkt
     icon: download
+  - label: Report (PDF)
+    href: assets/cs331-project-1-switch-router-network-design-report.pdf
+    icon: pdf
+  - label: Assignment brief
+    href: assets/cs331-project-1-switch-router-network-design-brief.pdf
+    icon: clipboard
 ---
 
 ## At a glance
@@ -39,14 +45,14 @@ actions:
 
 ## Devices
 
-| Device | Model | Role |
-|---|---|---|
-| R1 | Cisco 2901 | Router: G0/0 → Network A, G0/1 → Network B |
-| Switch1 | Cisco 2960 | Network A access switch |
-| Switch 2 | Cisco 2960 | Network B access switch |
-| PC A, PC B | PC | Hosts on Network A |
-| PC1, PC2 | PC | Hosts on Network B |
-| Web Server (Server 1) | Server | HTTP and HTTPS on Network B |
+| Device                | Model      | Role                                       |
+| --------------------- | ---------- | ------------------------------------------ |
+| R1                    | Cisco 2901 | Router: G0/0 → Network A, G0/1 → Network B |
+| Switch1               | Cisco 2960 | Network A access switch                    |
+| Switch 2              | Cisco 2960 | Network B access switch                    |
+| PC A, PC B            | PC         | Hosts on Network A                         |
+| PC1, PC2              | PC         | Hosts on Network B                         |
+| Web Server (Server 1) | Server     | HTTP and HTTPS on Network B                |
 
 ## The build, step by step
 

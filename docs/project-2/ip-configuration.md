@@ -16,10 +16,10 @@ chips:
 
 ## Addressing table
 
-| Device | Interface | IP address | Subnet mask | Default gateway |
-|---|---|---|---|---|
-| Server0 | FastEthernet0 | `192.168.1.10` | `255.255.255.0` | N/A |
-| PC0 | FastEthernet0 | `192.168.1.20` | `255.255.255.0` | N/A |
+| Device  | Interface     | IP address     | Subnet mask     | Default gateway |
+| ------- | ------------- | -------------- | --------------- | --------------- |
+| Server0 | FastEthernet0 | `192.168.1.10` | `255.255.255.0` | N/A             |
+| PC0     | FastEthernet0 | `192.168.1.20` | `255.255.255.0` | N/A             |
 
 ## Web server
 

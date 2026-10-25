@@ -60,26 +60,26 @@ The last octet becomes `11000000` = 128 + 64 = **192**, so the mask is `255.255.
 
 ## Subnet table
 
-| Subnet | Network | Usable range | Broadcast | Use |
-|---:|---|---|---|---|
-| 1 | `199.19.30.0/26` | `.1` – `.62` | `.63` | **Network A** (R1 G0/0) |
-| 2 | `199.19.30.64/26` | `.65` – `.126` | `.127` | **Network B** (R1 G0/1) |
-| 3 | `199.19.30.128/26` | `.129` – `.190` | `.191` | Future use |
-| 4 | `199.19.30.192/26` | `.193` – `.254` | `.255` | Future use |
+| Subnet | Network            | Usable range    | Broadcast | Use                     |
+| -----: | ------------------ | --------------- | --------- | ----------------------- |
+|      1 | `199.19.30.0/26`   | `.1` – `.62`    | `.63`     | **Network A** (R1 G0/0) |
+|      2 | `199.19.30.64/26`  | `.65` – `.126`  | `.127`    | **Network B** (R1 G0/1) |
+|      3 | `199.19.30.128/26` | `.129` – `.190` | `.191`    | Future use              |
+|      4 | `199.19.30.192/26` | `.193` – `.254` | `.255`    | Future use              |
 
 ## Addressing plan
 
 The first usable address of each subnet goes to the router interface, which is the default gateway for that subnet. Hosts follow in order.
 
-| Device | Interface | IP address | Subnet mask | Default gateway |
-|---|---|---|---|---|
-| R1 | G0/0 | `199.19.30.1` | `255.255.255.192` | N/A |
-| R1 | G0/1 | `199.19.30.65` | `255.255.255.192` | N/A |
-| PC A | NIC | `199.19.30.2` | `255.255.255.192` | `199.19.30.1` |
-| PC B | NIC | `199.19.30.3` | `255.255.255.192` | `199.19.30.1` |
-| PC1 | NIC | `199.19.30.66` | `255.255.255.192` | `199.19.30.65` |
-| PC2 | NIC | `199.19.30.67` | `255.255.255.192` | `199.19.30.65` |
-| Web Server | NIC | `199.19.30.68` | `255.255.255.192` | `199.19.30.65` |
+| Device     | Interface | IP address     | Subnet mask       | Default gateway |
+| ---------- | --------- | -------------- | ----------------- | --------------- |
+| R1         | G0/0      | `199.19.30.1`  | `255.255.255.192` | N/A             |
+| R1         | G0/1      | `199.19.30.65` | `255.255.255.192` | N/A             |
+| PC A       | NIC       | `199.19.30.2`  | `255.255.255.192` | `199.19.30.1`   |
+| PC B       | NIC       | `199.19.30.3`  | `255.255.255.192` | `199.19.30.1`   |
+| PC1        | NIC       | `199.19.30.66` | `255.255.255.192` | `199.19.30.65`  |
+| PC2        | NIC       | `199.19.30.67` | `255.255.255.192` | `199.19.30.65`  |
+| Web Server | NIC       | `199.19.30.68` | `255.255.255.192` | `199.19.30.65`  |
 
 /// tip | Quick check: same subnet?
 With a /26, two addresses share a subnet only if they fall in the same block of 64. PC A (`.2`) is in 0–63 and PC2 (`.67`) is in 64–127. They are on different subnets, so PC A sends its ping to its gateway, `.1`, and R1 routes it.

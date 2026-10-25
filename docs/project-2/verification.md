@@ -40,6 +40,7 @@ In the URL field we entered `http://192.168.1.10` and clicked **Go**. Server0 an
 <div class="card-icon">:icon-globe:</div>
 
 ### No DNS needed
+
 The URL uses the IP address directly, so there is no name to resolve. That is why the brief could leave the DNS server out.
 </div>
 
@@ -47,6 +48,7 @@ The URL uses the IP address directly, so there is no name to resolve. That is wh
 <div class="card-icon">:icon-switch:</div>
 
 ### No router needed
+
 Both devices are in `192.168.1.0/24`. PC0 learns Server0's MAC with ARP and the switch forwards the frames directly.
 </div>
 
@@ -54,6 +56,7 @@ Both devices are in `192.168.1.0/24`. PC0 learns Server0's MAC with ARP and the 
 <div class="card-icon">:icon-send:</div>
 
 ### HTTP end to end
+
 The browser opens a TCP connection to port 80, sends `GET /`, and gets `index.html` back. Every layer from the cable up is working.
 </div>
 
@@ -61,10 +64,10 @@ The browser opens a TCP connection to port 80, sends `GET /`, and gets `index.ht
 
 ## Checklist
 
-| Check | Result |
-|---|---|
-| Static IPs on Server0 and PC0 | <span class="led"></span>Pass |
-| HTTP and HTTPS on | <span class="led"></span>Pass |
+| Check                                      | Result                        |
+| ------------------------------------------ | ----------------------------- |
+| Static IPs on Server0 and PC0              | <span class="led"></span>Pass |
+| HTTP and HTTPS on                          | <span class="led"></span>Pass |
 | Only `index.html` left in the File Manager | <span class="led"></span>Pass |
-| `index.html` shows both members and IDs | <span class="led"></span>Pass |
-| PC0 loads `http://192.168.1.10` | <span class="led"></span>Pass |
+| `index.html` shows both members and IDs    | <span class="led"></span>Pass |
+| PC0 loads `http://192.168.1.10`            | <span class="led"></span>Pass |

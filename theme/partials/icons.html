@@ -1,5 +1,11 @@
-{#- Inline stroke icons (24px grid). Usage: {{ i.icon("cpu") }}
-    The paths live in hooks/icons.py (ICONS), shared with Markdown's :icon-name: syntax. -#}
-{% macro icon(name, cls="") -%}
-<svg class="icon{% if cls %} {{ cls }}{% endif %}" viewBox="0 0 24 24" aria-hidden="true">{{ ICONS[name] | safe }}</svg>
+{#- Inline stroke icons (24px grid). Usage: {{ i.icon("cpu") }} The paths live
+in hooks/icons.py (ICONS), shared with Markdown's :icon-name: syntax. -#} {%
+macro icon(name, cls="") -%}
+<svg
+  class="icon{% if cls %} {{ cls }}{% endif %}"
+  viewBox="0 0 24 24"
+  aria-hidden="true"
+>
+  {{ ICONS[name] | safe }}
+</svg>
 {%- endmacro %}

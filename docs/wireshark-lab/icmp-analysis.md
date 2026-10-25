@@ -16,7 +16,7 @@ chips:
 
 ## The ping
 
-``` { .text .ios title="zsh · ping" }
+```{ .text .ios title="zsh · ping" }
 % ping -c 4 google.com.sa
 PING google.com.sa (172.217.17.35): 56 data bytes
 64 bytes from 172.217.17.35: icmp_seq=0 ttl=114 time=121.913 ms
@@ -121,6 +121,7 @@ Frame 228 is the first echo request with my IP as the source.
 <div class="card-icon">:icon-switch:</div>
 
 ### MAC · Layer 2 · hop by hop
+
 Changes on every link. In frame 228 the destination is the router, not Google.
 </div>
 
@@ -128,6 +129,7 @@ Changes on every link. In frame 228 the destination is the router, not Google.
 <div class="card-icon">:icon-globe:</div>
 
 ### IP · Layer 3 · end to end
+
 Stays the same from my Mac to Google: `192.168.1.229 → 172.217.17.35` (unless NAT rewrites it).
 </div>
 
@@ -137,10 +139,10 @@ Stays the same from my Mac to Google: `192.168.1.229 → 172.217.17.35` (unless 
 
 ## RTT: two clocks
 
-| Measurement | Calculation | RTT |
-|---|---|---|
-| Wireshark, frame 228 → 230 | `10.092348 − 10.013828` s | **78.52 ms** |
-| `ping`, first reply | as printed | **121.913 ms** |
+| Measurement                | Calculation               | RTT            |
+| -------------------------- | ------------------------- | -------------- |
+| Wireshark, frame 228 → 230 | `10.092348 − 10.013828` s | **78.52 ms**   |
+| `ping`, first reply        | as printed                | **121.913 ms** |
 
 The tools time different things. **Wireshark** stamps each packet as it passes the network interface, so the gap between request and reply is close to the real network time. **`ping`** is an ordinary program: it reads the clock before handing the packet to the operating system and again after it is woken up with the reply. That also counts the kernel's network stack, socket buffers, and scheduling.
 
@@ -161,11 +163,11 @@ All four pings show where the extra time goes:
   </div>
 </div>
 
-| Ping | Wire RTT | `ping` RTT | Difference |
-|---:|---:|---:|---:|
-| seq=0 | 78.520 ms | 121.913 ms | **+43.393 ms** |
-| seq=1 | 89.858 ms | 91.989 ms | +2.131 ms |
-| seq=2 | 91.275 ms | 92.667 ms | +1.392 ms |
-| seq=3 | 104.394 ms | 106.484 ms | +2.090 ms |
+|  Ping |   Wire RTT | `ping` RTT |     Difference |
+| ----: | ---------: | ---------: | -------------: |
+| seq=0 |  78.520 ms | 121.913 ms | **+43.393 ms** |
+| seq=1 |  89.858 ms |  91.989 ms |      +2.131 ms |
+| seq=2 |  91.275 ms |  92.667 ms |      +1.392 ms |
+| seq=3 | 104.394 ms | 106.484 ms |      +2.090 ms |
 
 The overhead is about **2 ms** on the last three pings and **43 ms on the first**. The first packet pays one-time costs inside the Mac. Both numbers are right for what they measure, and Wireshark's is the better measure of the network.

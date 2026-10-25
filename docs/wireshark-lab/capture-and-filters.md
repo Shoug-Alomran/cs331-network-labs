@@ -16,14 +16,14 @@ chips:
 
 ## The six filters
 
-| # | Filter | Shows |
-|---:|---|---|
-| 1 | `http` | Only HTTP: the `HEAD /` request and the `200 OK` reply |
-| 2 | `ip.addr == 192.168.1.229` | Every IPv4 packet to **or** from my Mac |
-| 3 | `ip.src == 192.168.1.229` | Only packets my Mac **sent** |
-| 4 | `ip.dst == 192.168.1.229` | Only packets my Mac **received** |
-| 5 | `ip.dst == 192.168.1.229 and http` | HTTP addressed to my Mac, which is the server's response |
-| 6 | `dns or http` | Lookups and web requests together, each lookup just before its request |
+|   # | Filter                             | Shows                                                                  |
+| --: | ---------------------------------- | ---------------------------------------------------------------------- |
+|   1 | `http`                             | Only HTTP: the `HEAD /` request and the `200 OK` reply                 |
+|   2 | `ip.addr == 192.168.1.229`         | Every IPv4 packet to **or** from my Mac                                |
+|   3 | `ip.src == 192.168.1.229`          | Only packets my Mac **sent**                                           |
+|   4 | `ip.dst == 192.168.1.229`          | Only packets my Mac **received**                                       |
+|   5 | `ip.dst == 192.168.1.229 and http` | HTTP addressed to my Mac, which is the server's response               |
+|   6 | `dns or http`                      | Lookups and web requests together, each lookup just before its request |
 
 `ip.addr` matches if **either** the source or the destination equals the address. `and` keeps packets that match both conditions, and `or` keeps packets that match either one.
 
@@ -78,7 +78,7 @@ Port 80 never answered, so `curl` gave up with a timeout. Everything the browser
 
 To get readable HTTP I used **http://neverssl.com** (`34.223.124.45`), a site kept on plain HTTP for testing:
 
-``` { .text .ios title="zsh · curl" }
+```{ .text .ios title="zsh · curl" }
 % curl -I http://neverssl.com
 HTTP/1.1 200 OK
 Server: Apache/2.4.68 ()
@@ -96,12 +96,12 @@ Content-Type: text/html; charset=UTF-8
 
 `google.com.sa` was resolved twice:
 
-| Resolver | Answer | Where |
-|---|---|---|
-| `8.8.8.8` (Google Public DNS) | `142.250.203.3` | `nslookup google.com.sa 8.8.8.8` |
+| Resolver                              | Answer          | Where                                    |
+| ------------------------------------- | --------------- | ---------------------------------------- |
+| `8.8.8.8` (Google Public DNS)         | `142.250.203.3` | `nslookup google.com.sa 8.8.8.8`         |
 | `192.168.1.1` (the router, local DNS) | `172.217.17.35` | Frames 221 and 224, just before the ping |
 
-``` { .text .ios title="zsh · nslookup via 8.8.8.8" }
+```{ .text .ios title="zsh · nslookup via 8.8.8.8" }
 % nslookup google.com.sa 8.8.8.8
 Server:		8.8.8.8
 Address:	8.8.8.8#53
@@ -125,6 +125,7 @@ Both answers are correct:
 <div class="card-icon">:icon-server:</div>
 
 ### Many front ends
+
 Google serves the same site from many IP addresses around the world, not from one machine.
 </div>
 
@@ -132,6 +133,7 @@ Google serves the same site from many IP addresses around the world, not from on
 <div class="card-icon">:icon-globe:</div>
 
 ### Depends on who asks
+
 Google's DNS gives out an address near where the query seems to come from. My router and 8.8.8.8 sit in different places, so each gets a different "nearest" server.
 </div>
 
@@ -139,6 +141,7 @@ Google's DNS gives out an address near where the query seems to come from. My ro
 <div class="card-icon">:icon-network:</div>
 
 ### Anycast
+
 `8.8.8.8` is one address announced from many Google sites. The query goes to whichever is closest in routing terms.
 </div>
 

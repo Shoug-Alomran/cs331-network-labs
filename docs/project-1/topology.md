@@ -34,15 +34,15 @@ chips:
 
 All links are **copper straight-through**: each one joins an end device or the router to a switch.
 
-| From | Port | To |
-|---|---|---|
-| R1 | GigabitEthernet0/0 | Switch1 |
-| R1 | GigabitEthernet0/1 | Switch 2 |
-| PC A | FastEthernet0 | Switch1 |
-| PC B | FastEthernet0 | Switch1 |
-| PC1 | FastEthernet0 | Switch 2 |
-| PC2 | FastEthernet0 | Switch 2 |
-| Server 1 | FastEthernet0 | Switch 2 |
+| From     | Port               | To       |
+| -------- | ------------------ | -------- |
+| R1       | GigabitEthernet0/0 | Switch1  |
+| R1       | GigabitEthernet0/1 | Switch 2 |
+| PC A     | FastEthernet0      | Switch1  |
+| PC B     | FastEthernet0      | Switch1  |
+| PC1      | FastEthernet0      | Switch 2 |
+| PC2      | FastEthernet0      | Switch 2 |
+| Server 1 | FastEthernet0      | Switch 2 |
 
 /// warning | Which router port goes to which switch matters
 G0/0 is Network A's gateway (`.1`) and G0/1 is Network B's (`.65`). If the two uplinks are swapped, each LAN is cabled to a router port on the other subnet. Both ports still show up/up, but nothing crosses. That is what broke the first ping, see [Verification](verification.md#troubleshooting-the-first-ping). You can try it in the [ping lab](../index.md#ping-lab) on the home page.

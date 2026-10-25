@@ -28,13 +28,13 @@ On Server0, **Services → HTTP**, both **HTTP** and **HTTPS** switched to **On*
 
 Packet Tracer's server ships with a sample site. In the **File Manager** we deleted every default file except `index.html`:
 
-| File | Action |
-|---|---|
-| `copyrights.html` | Deleted |
-| `cscoplogo177x111.jpg` | Deleted |
-| `helloworld.html` | Deleted |
-| `image.html` | Deleted |
-| `index.html` | **Kept and edited** |
+| File                   | Action              |
+| ---------------------- | ------------------- |
+| `copyrights.html`      | Deleted             |
+| `cscoplogo177x111.jpg` | Deleted             |
+| `helloworld.html`      | Deleted             |
+| `image.html`           | Deleted             |
+| `index.html`           | **Kept and edited** |
 
 <div class="gallery contain single" markdown>
 
@@ -46,7 +46,7 @@ Packet Tracer's server ships with a sample site. In the **File Manager** we dele
 
 We clicked **(edit)** next to `index.html`, replaced its content with the brief's template filled in with our names and student IDs, and clicked **Save**.
 
-``` { .html title="index.html" }
+```{ .html title="index.html" }
 <html>
 <body>
 <h1>Welcome to our CS331 Project</h1>

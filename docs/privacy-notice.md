@@ -16,6 +16,7 @@ This website does **not** collect, store or process personal data.
 <div class="card-icon">:icon-users:</div>
 
 ### No user accounts
+
 Visitors cannot create accounts or submit login credentials.
 </div>
 
@@ -23,6 +24,7 @@ Visitors cannot create accounts or submit login credentials.
 <div class="card-icon">:icon-shield:</div>
 
 ### No tracking cookies
+
 The site uses no cookies for analytics or behavioural tracking.
 </div>
 
@@ -30,6 +32,7 @@ The site uses no cookies for analytics or behavioural tracking.
 <div class="card-icon">:icon-chart:</div>
 
 ### No analytics services
+
 No third-party analytics platforms are integrated.
 </div>
 
@@ -37,13 +40,14 @@ No third-party analytics platforms are integrated.
 <div class="card-icon">:icon-folder:</div>
 
 ### No stored submissions
+
 The site does not store form submissions or user-generated data.
 </div>
 
 </div>
 
 !!! note "Stored in your browser only"
-    Your light or dark theme choice is saved in your own browser's local storage so the site remembers it. It never leaves your device.
+Your light or dark theme choice is saved in your own browser's local storage so the site remembers it. It never leaves your device.
 
 ## Email
 

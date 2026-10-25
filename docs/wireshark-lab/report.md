@@ -16,6 +16,9 @@ actions:
   - label: Open full screen
     href: report.html
     icon: external
+  - label: Report (PDF)
+    href: ../assets/cs331-lab-01-wireshark-packet-capture-report.pdf
+    icon: pdf
   - label: Back to the overview
     href: ../
     icon: arrow-left

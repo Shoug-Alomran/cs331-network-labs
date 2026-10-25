@@ -17,7 +17,7 @@ chips:
 
 ## Configuration
 
-``` { .text .ios title="R1 · console" }
+```{ .text .ios title="R1 · console" }
 Router>enable
 Router#configure terminal
 Router(config)#hostname R1
@@ -32,15 +32,15 @@ R1(config-if)#end
 R1#
 ```
 
-| Command | What it does |
-|---|---|
-| `enable` | User EXEC (`>`) → privileged EXEC (`#`) |
-| `configure terminal` | Enter global configuration mode |
-| `hostname R1` | Name the router. The prompt changes at once |
-| `interface GigabitEthernet0/0` | Select the port facing Network A |
+| Command                                  | What it does                                  |
+| ---------------------------------------- | --------------------------------------------- |
+| `enable`                                 | User EXEC (`>`) → privileged EXEC (`#`)       |
+| `configure terminal`                     | Enter global configuration mode               |
+| `hostname R1`                            | Name the router. The prompt changes at once   |
+| `interface GigabitEthernet0/0`           | Select the port facing Network A              |
 | `ip address 199.19.30.1 255.255.255.192` | Network A's gateway address with the /26 mask |
-| `no shutdown` | Turn the interface on |
-| `end` | Back to privileged EXEC |
+| `no shutdown`                            | Turn the interface on                         |
+| `end`                                    | Back to privileged EXEC                       |
 
 <div class="gallery contain single tall" markdown>
 
@@ -60,7 +60,7 @@ The Config tab shows the same settings per interface:
 
 ## `show ip interface brief`
 
-``` { .text .ios title="R1 · show ip interface brief" }
+```{ .text .ios title="R1 · show ip interface brief" }
 R1#show ip interface brief
 Interface              IP-Address      OK? Method Status                Protocol
 GigabitEthernet0/0     199.19.30.1     YES manual up                    up
@@ -80,6 +80,7 @@ Vlan1                  unassigned      YES unset  administratively down down
 <div class="card-icon">:icon-plug:</div>
 
 ### Status · up · Layer 1
+
 A cable is connected and the port has not been shut down.
 </div>
 
@@ -87,6 +88,7 @@ A cable is connected and the port has not been shut down.
 <div class="card-icon">:icon-activity:</div>
 
 ### Protocol · up · Layer 2
+
 The link is working at the data-link layer.
 </div>
 

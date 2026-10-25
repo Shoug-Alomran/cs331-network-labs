@@ -16,6 +16,7 @@ The project demonstrates understanding of:
 <div class="card-icon">:icon-activity:</div>
 
 ### Packet analysis
+
 Capturing live traffic in Wireshark and reading it with display filters.
 </div>
 
@@ -23,6 +24,7 @@ Capturing live traffic in Wireshark and reading it with display filters.
 <div class="card-icon">:icon-grid:</div>
 
 ### IP addressing
+
 Subnetting a /24 block and building an addressing plan.
 </div>
 
@@ -30,6 +32,7 @@ Subnetting a /24 block and building an addressing plan.
 <div class="card-icon">:icon-router:</div>
 
 ### Switching and routing
+
 Configuring a Cisco router and connecting two LANs through it.
 </div>
 
@@ -37,6 +40,7 @@ Configuring a Cisco router and connecting two LANs through it.
 <div class="card-icon">:icon-file:</div>
 
 ### Technical documentation
+
 Structured reporting, reproducibility and academic presentation.
 </div>
 

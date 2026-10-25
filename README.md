@@ -7,11 +7,11 @@ Computer Networks** at Prince Sultan University, Term 261 (1st semester 2026–2
 - **Instructor:** Ms. Nada Alalyani
 - **Live site:** <https://network.shoug-tech.com>
 
-| # | Project | Type | Status |
-|---|---|---|---|
-| 01 | Lab 01: Wireshark Packet Capture and Display Filtering | Individual · 3 marks | Complete |
-| 02 | Project 1: Switch and Router Network Design in Cisco Packet Tracer | Individual · 2.5 marks | Complete |
-| 03 | Project 2: Web Server Configuration in Cisco Packet Tracer (with Aljawhara Alruzuq) | Group · 2.5 marks | Complete |
+| #   | Project                                                                             | Type                   | Status   |
+| --- | ----------------------------------------------------------------------------------- | ---------------------- | -------- |
+| 01  | Lab 01: Wireshark Packet Capture and Display Filtering                              | Individual · 3 marks   | Complete |
+| 02  | Project 1: Switch and Router Network Design in Cisco Packet Tracer                  | Individual · 2.5 marks | Complete |
+| 03  | Project 2: Web Server Configuration in Cisco Packet Tracer (with Aljawhara Alruzuq) | Group · 2.5 marks      | Complete |
 
 ## Run locally
 
@@ -64,8 +64,16 @@ docs/
   copyright.md, privacy-notice.md, academic-disclaimer.md   footer pages
 ```
 
-Only `docs/` is published. The assignment PDFs, the lab report and the `.pcapng`
-captures in the repository root are not part of the site.
+Only `docs/` is published. Every PDF lives with its project:
+
+| PDF | Folder |
+|---|---|
+| `cs331-lab-01-wireshark-packet-capture-report.pdf` (MAC redacted) | `docs/wireshark-lab/assets/` |
+| `cs331-project-1-switch-router-network-design-report.pdf`, `…-brief.pdf` | `docs/project-1/assets/` |
+| `cs331-project-2-web-server-configuration-report.pdf`, `…-brief.pdf` | `docs/project-2/assets/` |
+| `cs331-lab-01-wireshark-packet-capture-report-unredacted.pdf` | `sources/wireshark-lab/` (not published) |
+
+The `.pcapng` captures and the lab sheet in the repository root are not part of the site either.
 
 ## Screenshots
 
@@ -80,17 +88,17 @@ Each image's caption is its alt text.
 Each project has a `report/` page that embeds its deck, plus the full-screen deck
 itself at `report/report.html`. The decks are single self-contained HTML files.
 
-| Key | Action |
-|---|---|
-| <kbd>→</kbd> <kbd>Space</kbd> | Next slide |
-| <kbd>←</kbd> | Previous slide |
-| <kbd>Home</kbd> / <kbd>End</kbd> | First / last slide |
-| <kbd>F</kbd> | Full screen |
-| <kbd>T</kbd> | Light / dark (shared with the site) |
+| Key                              | Action                              |
+| -------------------------------- | ----------------------------------- |
+| <kbd>→</kbd> <kbd>Space</kbd>    | Next slide                          |
+| <kbd>←</kbd>                     | Previous slide                      |
+| <kbd>Home</kbd> / <kbd>End</kbd> | First / last slide                  |
+| <kbd>F</kbd>                     | Full screen                         |
+| <kbd>T</kbd>                     | Light / dark (shared with the site) |
 
 You can also click (the left quarter goes back), swipe, or click a stop on the progress
 wire. Every slide's footer reads **Shoug Alomran · CS331** with the slide number. Under
-*reduce motion* the animations show their final state. Printing gives one slide per page.
+_reduce motion_ the animations show their final state. Printing gives one slide per page.
 
 ## Adding Arabic
 
@@ -101,7 +109,7 @@ pages, and copy each deck to `report.ar.html` with `<html lang="ar" dir="rtl">`.
 ## Deploy
 
 - **GitHub Pages:** push to `main`. `.github/workflows/deploy.yml` runs `mkdocs build --strict`
-  and publishes `site/`. Set Pages → Source to *GitHub Actions*. `docs/CNAME` sets
+  and publishes `site/`. Set Pages → Source to _GitHub Actions_. `docs/CNAME` sets
   `network.shoug-tech.com`.
 - **Vercel:** `vercel.json` installs `requirements.txt`, builds, and serves `site/`.
 

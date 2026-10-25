@@ -17,6 +17,9 @@ actions:
   - label: Open the presentation
     href: report/
     icon: slides
+  - label: Report (PDF)
+    href: assets/cs331-lab-01-wireshark-packet-capture-report.pdf
+    icon: pdf
   - label: Start with setup
     href: setup/
     icon: arrow-right
@@ -31,14 +34,14 @@ actions:
   <div class="stat"><div class="stat-value">78.52<small>ms</small></div><div class="stat-label">Round trip on the wire</div></div>
 </div>
 
-| Item | Value |
-|---|---|
-| Machine | MacBook Air (M2), macOS |
-| Interface | `en0` (Wi-Fi) |
-| IPv4 address | `192.168.1.229` |
-| MAC address | `a8:8f:d9:xx:xx:xx` (redacted on this site) |
+| Item            | Value                                                             |
+| --------------- | ----------------------------------------------------------------- |
+| Machine         | MacBook Air (M2), macOS                                           |
+| Interface       | `en0` (Wi-Fi)                                                     |
+| IPv4 address    | `192.168.1.229`                                                   |
+| MAC address     | `a8:8f:d9:xx:xx:xx` (redacted on this site)                       |
 | Default gateway | `192.168.1.1`, MAC `24:5a:4c:81:24:16`, also the local DNS server |
-| Ping target | `google.com.sa` → `172.217.17.35` |
+| Ping target     | `google.com.sa` → `172.217.17.35`                                 |
 
 ## What's inside
 

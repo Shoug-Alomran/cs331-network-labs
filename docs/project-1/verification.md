@@ -32,7 +32,7 @@ chips:
 </ol>
 </div>
 
-``` { .text .ios title="PC A · Command Prompt · before the fix" }
+```{ .text .ios title="PC A · Command Prompt · before the fix" }
 C:\>ping 199.19.30.67
 
 Pinging 199.19.30.67 with 32 bytes of data:
@@ -54,7 +54,7 @@ The [ping lab](../index.md#ping-lab) on the home page simulates this network. Se
 
 ## Ping after the fix
 
-``` { .text .ios title="PC A · Command Prompt · after the fix" }
+```{ .text .ios title="PC A · Command Prompt · after the fix" }
 C:\>ping 199.19.30.67
 
 Pinging 199.19.30.67 with 32 bytes of data:
@@ -82,6 +82,7 @@ Approximate round trip times in milli-seconds:
 <div class="card-icon hot">:icon-router:</div>
 
 ### TTL=127 means one router hop
+
 PC2 sends its reply with TTL 128. R1 subtracts 1 while forwarding it, so it reaches PC A with 127. One router between the hosts, as designed.
 </div>
 
@@ -89,6 +90,7 @@ PC2 sends its reply with TTL 128. R1 subtracts 1 while forwarding it, so it reac
 <div class="card-icon">:icon-clock:</div>
 
 ### The first reply is the slowest
+
 32 ms, then 11 ms, then under 1 ms. The first exchange waits while ARP resolves the MAC addresses: PC A learns the gateway's, and R1 learns PC2's. After that they are cached.
 </div>
 
@@ -106,9 +108,9 @@ From **PC B → Desktop → Web Browser** I opened `http://199.19.30.68`. The pa
 
 ## Checklist
 
-| Check | Result |
-|---|---|
-| R1 G0/0 and G0/1 up/up | <span class="led"></span>Pass |
-| PC A → own gateway | <span class="led"></span>Pass, after re-cabling |
-| PC A → PC2 (Network A → B) | <span class="led"></span>Pass, 4/4, TTL=127 |
-| PC B → `http://199.19.30.68` | <span class="led"></span>Pass |
+| Check                        | Result                                          |
+| ---------------------------- | ----------------------------------------------- |
+| R1 G0/0 and G0/1 up/up       | <span class="led"></span>Pass                   |
+| PC A → own gateway           | <span class="led"></span>Pass, after re-cabling |
+| PC A → PC2 (Network A → B)   | <span class="led"></span>Pass, 4/4, TTL=127     |
+| PC B → `http://199.19.30.68` | <span class="led"></span>Pass                   |

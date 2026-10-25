@@ -16,6 +16,9 @@ actions:
   - label: Open full screen
     href: report.html
     icon: external
+  - label: Report (PDF)
+    href: ../assets/cs331-project-1-switch-router-network-design-report.pdf
+    icon: pdf
   - label: Download the .pkt
     href: ../assets/Shoug_Alomran_Project1.pkt
     icon: download

@@ -15,6 +15,7 @@ lead: © 2026 Shoug Fawaz Alomran. All rights reserved. All content published un
 <div class="card-icon">:icon-code:</div>
 
 ### Software
+
 Source implementations, experimental code and technical solutions.
 </div>
 
@@ -22,6 +23,7 @@ Source implementations, experimental code and technical solutions.
 <div class="card-icon">:icon-file:</div>
 
 ### Documentation
+
 Reports, structured notes, technical explanations and research writing.
 </div>
 
@@ -29,6 +31,7 @@ Reports, structured notes, technical explanations and research writing.
 <div class="card-icon">:icon-sparkle:</div>
 
 ### Design & layout
+
 Visual structure, custom styling and presentation design.
 </div>
 
@@ -36,6 +39,7 @@ Visual structure, custom styling and presentation design.
 <div class="card-icon">:icon-flask:</div>
 
 ### Research content
+
 Analytical findings, experimental results and methodology.
 </div>
 
@@ -43,6 +47,7 @@ Analytical findings, experimental results and methodology.
 <div class="card-icon">:icon-book:</div>
 
 ### Written material
+
 All authored content, unless otherwise stated.
 </div>
 
@@ -68,4 +73,4 @@ Some individual projects may include their own open-source or academic licenses.
 For permissions, licensing questions or formal requests, email [Shoug.Alomran@Shoug-Tech.com](mailto:Shoug.Alomran@Shoug-Tech.com).
 
 !!! note ""
-    This policy protects original academic and technical work while allowing responsible educational reference and citation.
+This policy protects original academic and technical work while allowing responsible educational reference and citation.
